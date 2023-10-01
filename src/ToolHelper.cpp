@@ -8,6 +8,7 @@
 #include <set>
 #include <map>
 #include <algorithm>
+#include <limits>
 
 class ToolHelper
 {
@@ -134,6 +135,48 @@ public:
             if (i != data_matrix.size() - 1)
             {
                 std::cout << separator << std::endl;
+            }
+        }
+    }
+
+    /**
+     * @brief Normalize data between [0,1] values
+     *
+     * @param data Data to be nornalized
+     */
+    void normalizeData(std::vector<std::vector<double>> &data)
+    {
+        if (data.empty() || data[0].empty())
+        {
+            return; // Handle empty data to avoid division by zero
+        }
+
+        double max_item = -std::numeric_limits<double>::infinity();
+        double min_item = std::numeric_limits<double>::infinity();
+
+        // Find the maximum and minimum values
+        for (const auto &row : data)
+        {
+            for (const double &item : row)
+            {
+                max_item = std::max(max_item, item);
+                min_item = std::min(min_item, item);
+            }
+        }
+
+        // Avoid division by zero if max_item and min_item are the same
+        if (max_item == min_item)
+        {
+            return;
+        }
+
+        // Normalize using x_iN = (x_i - min) / (max - min)
+        const double range = max_item - min_item;
+        for (auto &row : data)
+        {
+            for (double &item : row)
+            {
+                item = (item - min_item) / range;
             }
         }
     }
