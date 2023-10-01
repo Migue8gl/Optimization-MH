@@ -21,7 +21,7 @@ Seed=""
 Dataset=""
 
 # Define the directory for results
-ResultsDir="./results"
+ResultsDir="./files/results"
 
 # Process command line arguments
 while getopts ":ps:d:" opt; do

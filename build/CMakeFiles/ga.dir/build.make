@@ -83,30 +83,30 @@ CMakeFiles/ga.dir/src/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ga.dir/src/main.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/migue8gl/Desktop/Otros/C++/GA/src/main.cpp -o CMakeFiles/ga.dir/src/main.cpp.s
 
-CMakeFiles/ga.dir/src/ToolHelper.cpp.o: CMakeFiles/ga.dir/flags.make
-CMakeFiles/ga.dir/src/ToolHelper.cpp.o: ../src/ToolHelper.cpp
-CMakeFiles/ga.dir/src/ToolHelper.cpp.o: CMakeFiles/ga.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/migue8gl/Desktop/Otros/C++/GA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/ga.dir/src/ToolHelper.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ga.dir/src/ToolHelper.cpp.o -MF CMakeFiles/ga.dir/src/ToolHelper.cpp.o.d -o CMakeFiles/ga.dir/src/ToolHelper.cpp.o -c /home/migue8gl/Desktop/Otros/C++/GA/src/ToolHelper.cpp
+CMakeFiles/ga.dir/src/ToolsHelper.cpp.o: CMakeFiles/ga.dir/flags.make
+CMakeFiles/ga.dir/src/ToolsHelper.cpp.o: ../src/ToolsHelper.cpp
+CMakeFiles/ga.dir/src/ToolsHelper.cpp.o: CMakeFiles/ga.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/migue8gl/Desktop/Otros/C++/GA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/ga.dir/src/ToolsHelper.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ga.dir/src/ToolsHelper.cpp.o -MF CMakeFiles/ga.dir/src/ToolsHelper.cpp.o.d -o CMakeFiles/ga.dir/src/ToolsHelper.cpp.o -c /home/migue8gl/Desktop/Otros/C++/GA/src/ToolsHelper.cpp
 
-CMakeFiles/ga.dir/src/ToolHelper.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ga.dir/src/ToolHelper.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/migue8gl/Desktop/Otros/C++/GA/src/ToolHelper.cpp > CMakeFiles/ga.dir/src/ToolHelper.cpp.i
+CMakeFiles/ga.dir/src/ToolsHelper.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ga.dir/src/ToolsHelper.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/migue8gl/Desktop/Otros/C++/GA/src/ToolsHelper.cpp > CMakeFiles/ga.dir/src/ToolsHelper.cpp.i
 
-CMakeFiles/ga.dir/src/ToolHelper.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ga.dir/src/ToolHelper.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/migue8gl/Desktop/Otros/C++/GA/src/ToolHelper.cpp -o CMakeFiles/ga.dir/src/ToolHelper.cpp.s
+CMakeFiles/ga.dir/src/ToolsHelper.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ga.dir/src/ToolsHelper.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/migue8gl/Desktop/Otros/C++/GA/src/ToolsHelper.cpp -o CMakeFiles/ga.dir/src/ToolsHelper.cpp.s
 
 # Object files for target ga
 ga_OBJECTS = \
 "CMakeFiles/ga.dir/src/main.cpp.o" \
-"CMakeFiles/ga.dir/src/ToolHelper.cpp.o"
+"CMakeFiles/ga.dir/src/ToolsHelper.cpp.o"
 
 # External object files for target ga
 ga_EXTERNAL_OBJECTS =
 
 bin/ga: CMakeFiles/ga.dir/src/main.cpp.o
-bin/ga: CMakeFiles/ga.dir/src/ToolHelper.cpp.o
+bin/ga: CMakeFiles/ga.dir/src/ToolsHelper.cpp.o
 bin/ga: CMakeFiles/ga.dir/build.make
 bin/ga: CMakeFiles/ga.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/migue8gl/Desktop/Otros/C++/GA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable bin/ga"

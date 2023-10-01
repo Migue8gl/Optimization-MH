@@ -129,29 +129,29 @@ ga/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ga.dir/build.make CMakeFiles/ga.dir/build
 .PHONY : ga/fast
 
-src/ToolHelper.o: src/ToolHelper.cpp.o
-.PHONY : src/ToolHelper.o
+src/ToolsHelper.o: src/ToolsHelper.cpp.o
+.PHONY : src/ToolsHelper.o
 
 # target to build an object file
-src/ToolHelper.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ga.dir/build.make CMakeFiles/ga.dir/src/ToolHelper.cpp.o
-.PHONY : src/ToolHelper.cpp.o
+src/ToolsHelper.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ga.dir/build.make CMakeFiles/ga.dir/src/ToolsHelper.cpp.o
+.PHONY : src/ToolsHelper.cpp.o
 
-src/ToolHelper.i: src/ToolHelper.cpp.i
-.PHONY : src/ToolHelper.i
+src/ToolsHelper.i: src/ToolsHelper.cpp.i
+.PHONY : src/ToolsHelper.i
 
 # target to preprocess a source file
-src/ToolHelper.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ga.dir/build.make CMakeFiles/ga.dir/src/ToolHelper.cpp.i
-.PHONY : src/ToolHelper.cpp.i
+src/ToolsHelper.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ga.dir/build.make CMakeFiles/ga.dir/src/ToolsHelper.cpp.i
+.PHONY : src/ToolsHelper.cpp.i
 
-src/ToolHelper.s: src/ToolHelper.cpp.s
-.PHONY : src/ToolHelper.s
+src/ToolsHelper.s: src/ToolsHelper.cpp.s
+.PHONY : src/ToolsHelper.s
 
 # target to generate assembly for a file
-src/ToolHelper.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ga.dir/build.make CMakeFiles/ga.dir/src/ToolHelper.cpp.s
-.PHONY : src/ToolHelper.cpp.s
+src/ToolsHelper.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ga.dir/build.make CMakeFiles/ga.dir/src/ToolsHelper.cpp.s
+.PHONY : src/ToolsHelper.cpp.s
 
 src/main.o: src/main.cpp.o
 .PHONY : src/main.o
@@ -186,9 +186,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... ga"
-	@echo "... src/ToolHelper.o"
-	@echo "... src/ToolHelper.i"
-	@echo "... src/ToolHelper.s"
+	@echo "... src/ToolsHelper.o"
+	@echo "... src/ToolsHelper.i"
+	@echo "... src/ToolsHelper.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

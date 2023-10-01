@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/ga.dir/src/ToolHelper.cpp.o"
-  "CMakeFiles/ga.dir/src/ToolHelper.cpp.o.d"
+  "CMakeFiles/ga.dir/src/ToolsHelper.cpp.o"
+  "CMakeFiles/ga.dir/src/ToolsHelper.cpp.o.d"
   "CMakeFiles/ga.dir/src/main.cpp.o"
   "CMakeFiles/ga.dir/src/main.cpp.o.d"
   "bin/ga"

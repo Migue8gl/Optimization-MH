@@ -11,7 +11,7 @@
 #include <limits>
 #include <random>
 
-class ToolHelper
+class ToolsHelper
 {
 public:
     /**
