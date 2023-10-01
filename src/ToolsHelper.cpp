@@ -9,6 +9,7 @@
 #include <map>
 #include <algorithm>
 #include <limits>
+#include <random>
 
 class ToolHelper
 {
@@ -89,10 +90,9 @@ public:
     }
 
     /**
-     * @brief Display the content of data_matrix and class_vector in a tabular format.
-     *
-     * This function displays the data_matrix and class_vector in a tabular format
-     * with proper alignment and headers.
+     * @brief This function displays the contents of a data matrix and class vector in a tabular format
+     * with proper alignment and headers. It provides information about the dataset's attributes,
+     * the number of unique classes, and the data instances.
      *
      * @param data_matrix   Matrix with data to display
      * @param class_vector  Vector with class labels to display
@@ -140,9 +140,15 @@ public:
     }
 
     /**
-     * @brief Normalize data between [0,1] values
+     * @brief This function normalizes a two-dimensional data matrix to the [0, 1] range.
+     * Each element in the matrix is scaled so that it falls within this range while
+     * preserving the data's relative proportions.
      *
      * @param data Data to be nornalized
+     *
+     * @note If the input matrix is empty or contains empty rows, no normalization is performed.
+     *       If the maximum and minimum values in the data are the same, no normalization is applied
+     *       to avoid division by zero.
      */
     void normalizeData(std::vector<std::vector<double>> &data)
     {
@@ -179,5 +185,93 @@ public:
                 item = (item - min_item) / range;
             }
         }
+    }
+
+    /**
+     * @brief Function to generate a random int number in a given range
+     *
+     * @param min Lower bound
+     * @param max Upper bound
+     * @param seed seed An optional seed value to initialize the random number generator.
+     *             If not provided, a random seed is generated using std::random_device.
+     * @return int A random integer value within the specified range [min, max].
+     */
+    int generateRandomNumberInteger(int min, int max, std::random_device::result_type seed = std::random_device{}())
+    {
+        std::random_device rd;
+        std::mt19937 gen(seed);
+        std::uniform_int_distribution<int> distribution(min, max);
+
+        return distribution(gen);
+    }
+
+    /**
+     * @brief Function to generate a random double number in a given range
+     *
+     * @param min Lower bound
+     * @param max Upper bound
+     * @param seed seed An optional seed value to initialize the random number generator.
+     *             If not provided, a random seed is generated using std::random_device.
+     * @return int A random double value within the specified range [min, max].
+     */
+    double generateRandomNumberDouble(double min, double max, std::random_device::result_type seed = std::random_device{}())
+    {
+        std::random_device rd;
+        std::mt19937 gen(seed);
+        std::uniform_real_distribution<double> distribution(min, max);
+
+        return distribution(gen);
+    }
+
+    /**
+     * @brief Create Partitions of Data and Class Labels
+     *
+     * This function takes a data matrix and corresponding class labels, and it creates
+     * partitions of the data while preserving the class labels. The data is shuffled
+     * before partitioning to ensure randomness.
+     *
+     * @param data_matrix The input data matrix represented as a vector of vectors of doubles.
+     * @param class_vector The corresponding class labels represented as a vector of chars.
+     * @param k The number of partitions to create. It should be greater than 0 and less than or equal to the number of data samples.
+     *
+     * @throws std::invalid_argument If k is not within a valid range.
+     *
+     * @return A pair containing two vectors:
+     *   - The first vector is a vector of vectors of doubles representing the data partitions.
+     *   - The second vector is a vector of vectors of chars representing the class labels corresponding to the data partitions.
+     */
+    std::pair<std::vector<std::vector<std::vector<double>>>, std::vector<std::vector<char>>> createPartitions(
+        const std::vector<std::vector<double>> &data_matrix,
+        const std::vector<char> &class_vector,
+        int k)
+    {
+        if (k <= 0 || k > static_cast<int>(data_matrix.size()))
+        {
+            throw std::invalid_argument("Invalid value of k.");
+        }
+
+        // Shuffle the data and class vectors together
+        std::vector<std::pair<std::vector<double>, char>> shuffled_data;
+        for (size_t i = 0; i < data_matrix.size(); ++i)
+        {
+            shuffled_data.push_back(std::make_pair(data_matrix[i], class_vector[i]));
+        }
+
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::shuffle(shuffled_data.begin(), shuffled_data.end(), gen);
+
+        // Initialize partitions
+        std::vector<std::vector<std::vector<double>>> partitions(k);
+        std::vector<std::vector<char>> partitions_classes(k);
+
+        // Fill partitions while preserving classes
+        for (size_t i = 0; i < shuffled_data.size(); ++i)
+        {
+            partitions[i % k].push_back(shuffled_data[i].first);
+            partitions_classes[i % k].push_back(shuffled_data[i].second);
+        }
+
+        return std::make_pair(partitions, partitions_classes);
     }
 };
