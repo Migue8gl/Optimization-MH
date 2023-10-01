@@ -48,9 +48,9 @@ while getopts ":ps:d:t:" opt; do
             fi
             ;;
         t)
-            if [[ "$OPTARG" == "TRUE" || "$OPTARG" == "true" || "$OPTARG" == "1"]]; then
+            if [[ "$OPTARG" == "TRUE" || "$OPTARG" == "true" || "$OPTARG" == "1" ]]; then
                 Test=true
-            elif [[ "$OPTARG" == "FALSE" || "$OPTARG" == "false" || "$OPTARG" == "0"]]; then
+            elif [[ "$OPTARG" == "FALSE" || "$OPTARG" == "false" || "$OPTARG" == "0" ]]; then
                 Test=false
             else
                 echo "Error: The -t option requires TRUE or FALSE as the argument."
@@ -85,7 +85,7 @@ run_single_dataset() {
     if [ $dataset_index -ge 0 ] && [ $dataset_index -lt ${#Datasets[@]} ]; then
         dataset_name="${Datasets[$dataset_index]}"
         if [[ "$Test" == true ]]; then
-            ./build/bin/ga "$Seed" "$Dataset" -t > "$ResultsDir/${dataset_name}_results.txt"
+            ./build/bin/ga "$Seed" "$Dataset" "$Test" > "$ResultsDir/${dataset_name}_results.txt"
         else
             ./build/bin/ga "$Seed" "$Dataset" > "$ResultsDir/${dataset_name}_results.txt"
         fi
