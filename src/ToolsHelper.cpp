@@ -126,12 +126,12 @@ public:
         // Display instances with enumeration and separator
         for (size_t i = 0; i < data_matrix.size(); ++i)
         {
-            std::cout << "Instance [" << i + 1 << "] ->"; // Numerical index enclosed in square brackets
+            std::cout << "Instance [" << i + 1 << "] -> "; // Numerical index enclosed in square brackets
             for (size_t j = 0; j < numAttributes; ++j)
             {
-                std::cout << std::setw(12) << data_matrix[i][j];
+                std::cout << data_matrix[i][j] << " ";
             }
-            std::cout << std::setw(12) << class_vector[i] << std::endl;
+            std::cout << "- CLASS [" << class_vector[i] << "]" << std::endl;
             if (i != data_matrix.size() - 1)
             {
                 std::cout << separator << std::endl;

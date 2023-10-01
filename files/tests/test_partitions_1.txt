@@ -1,0 +1,42 @@
+-------- Test particiones --------
+
+Partition 1:
+----------------------------------
+Class Counts in Partition 1:
+Class 1: 17 instances
+Class 2: 53 instances
+Total Instances in Partition 1: 70 instances
+==================================
+
+Partition 2:
+----------------------------------
+Class Counts in Partition 2:
+Class 1: 20 instances
+Class 2: 50 instances
+Total Instances in Partition 2: 70 instances
+==================================
+
+Partition 3:
+----------------------------------
+Class Counts in Partition 3:
+Class 1: 18 instances
+Class 2: 52 instances
+Total Instances in Partition 3: 70 instances
+==================================
+
+Partition 4:
+----------------------------------
+Class Counts in Partition 4:
+Class 1: 26 instances
+Class 2: 44 instances
+Total Instances in Partition 4: 70 instances
+==================================
+
+Partition 5:
+----------------------------------
+Class Counts in Partition 5:
+Class 1: 14 instances
+Class 2: 55 instances
+Total Instances in Partition 5: 69 instances
+==================================
+

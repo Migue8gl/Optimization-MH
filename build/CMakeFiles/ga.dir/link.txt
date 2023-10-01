@@ -1,1 +1,1 @@
-/usr/bin/c++  -O2 CMakeFiles/ga.dir/src/main.cpp.o CMakeFiles/ga.dir/src/ToolsHelper.cpp.o -o bin/ga 
+/usr/bin/c++  -O2 CMakeFiles/ga.dir/src/main.cpp.o CMakeFiles/ga.dir/src/ToolsHelper.cpp.o CMakeFiles/ga.dir/src/Tests.cpp.o -o bin/ga 

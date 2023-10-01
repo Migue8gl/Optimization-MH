@@ -2,10 +2,11 @@
 
 # Function to show help information
 show_help() {
-    echo "Usage: $0 [-p] -s SEED [-d DATASET]"
+    echo "Usage: $0 [-p] -s SEED [-d DATASET] [-t TRUE/FALSE]"
     echo "  -p           Parallel execution (optional)"
     echo "  -s SEED      Seed for random number generation (required)"
     echo "  -d DATASET   Dataset to process (1, 2, 3) (optional, only if needed)"
+    echo "  -t TEST      Activate test to dump debug info into txt files (optional)"
     exit 1
 }
 
@@ -19,12 +20,13 @@ fi
 Parallel=false
 Seed=""
 Dataset=""
+Test=false  # New variable for -t option
 
 # Define the directory for results
 ResultsDir="./files/results"
 
 # Process command line arguments
-while getopts ":ps:d:" opt; do
+while getopts ":ps:d:t:" opt; do
     case $opt in
         p)
             Parallel=true
@@ -42,6 +44,16 @@ while getopts ":ps:d:" opt; do
                 Dataset="$OPTARG"
             else
                 echo "Error: The -d option requires a dataset value."
+                show_help
+            fi
+            ;;
+        t)
+            if [[ "$OPTARG" == "TRUE" || "$OPTARG" == "true" || "$OPTARG" == "1"]]; then
+                Test=true
+            elif [[ "$OPTARG" == "FALSE" || "$OPTARG" == "false" || "$OPTARG" == "0"]]; then
+                Test=false
+            else
+                echo "Error: The -t option requires TRUE or FALSE as the argument."
                 show_help
             fi
             ;;
@@ -72,7 +84,11 @@ run_single_dataset() {
     dataset_index=$((Dataset - 1))
     if [ $dataset_index -ge 0 ] && [ $dataset_index -lt ${#Datasets[@]} ]; then
         dataset_name="${Datasets[$dataset_index]}"
-        ./build/bin/ga "$Seed" "$Dataset" > "$ResultsDir/${dataset_name}_results.txt"
+        if [[ "$Test" == true ]]; then
+            ./build/bin/ga "$Seed" "$Dataset" -t > "$ResultsDir/${dataset_name}_results.txt"
+        else
+            ./build/bin/ga "$Seed" "$Dataset" > "$ResultsDir/${dataset_name}_results.txt"
+        fi
     else
         echo "Error: Invalid dataset index. Available datasets are 1, 2, and 3."
         show_help

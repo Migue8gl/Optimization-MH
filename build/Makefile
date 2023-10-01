@@ -129,6 +129,30 @@ ga/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ga.dir/build.make CMakeFiles/ga.dir/build
 .PHONY : ga/fast
 
+src/Tests.o: src/Tests.cpp.o
+.PHONY : src/Tests.o
+
+# target to build an object file
+src/Tests.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ga.dir/build.make CMakeFiles/ga.dir/src/Tests.cpp.o
+.PHONY : src/Tests.cpp.o
+
+src/Tests.i: src/Tests.cpp.i
+.PHONY : src/Tests.i
+
+# target to preprocess a source file
+src/Tests.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ga.dir/build.make CMakeFiles/ga.dir/src/Tests.cpp.i
+.PHONY : src/Tests.cpp.i
+
+src/Tests.s: src/Tests.cpp.s
+.PHONY : src/Tests.s
+
+# target to generate assembly for a file
+src/Tests.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ga.dir/build.make CMakeFiles/ga.dir/src/Tests.cpp.s
+.PHONY : src/Tests.cpp.s
+
 src/ToolsHelper.o: src/ToolsHelper.cpp.o
 .PHONY : src/ToolsHelper.o
 
@@ -186,6 +210,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... ga"
+	@echo "... src/Tests.o"
+	@echo "... src/Tests.i"
+	@echo "... src/Tests.s"
 	@echo "... src/ToolsHelper.o"
 	@echo "... src/ToolsHelper.i"
 	@echo "... src/ToolsHelper.s"
