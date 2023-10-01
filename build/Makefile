@@ -129,6 +129,30 @@ ga/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ga.dir/build.make CMakeFiles/ga.dir/build
 .PHONY : ga/fast
 
+src/MLAlgorithms.o: src/MLAlgorithms.cpp.o
+.PHONY : src/MLAlgorithms.o
+
+# target to build an object file
+src/MLAlgorithms.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ga.dir/build.make CMakeFiles/ga.dir/src/MLAlgorithms.cpp.o
+.PHONY : src/MLAlgorithms.cpp.o
+
+src/MLAlgorithms.i: src/MLAlgorithms.cpp.i
+.PHONY : src/MLAlgorithms.i
+
+# target to preprocess a source file
+src/MLAlgorithms.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ga.dir/build.make CMakeFiles/ga.dir/src/MLAlgorithms.cpp.i
+.PHONY : src/MLAlgorithms.cpp.i
+
+src/MLAlgorithms.s: src/MLAlgorithms.cpp.s
+.PHONY : src/MLAlgorithms.s
+
+# target to generate assembly for a file
+src/MLAlgorithms.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ga.dir/build.make CMakeFiles/ga.dir/src/MLAlgorithms.cpp.s
+.PHONY : src/MLAlgorithms.cpp.s
+
 src/Tests.o: src/Tests.cpp.o
 .PHONY : src/Tests.o
 
@@ -210,6 +234,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... ga"
+	@echo "... src/MLAlgorithms.o"
+	@echo "... src/MLAlgorithms.i"
+	@echo "... src/MLAlgorithms.s"
 	@echo "... src/Tests.o"
 	@echo "... src/Tests.i"
 	@echo "... src/Tests.s"

@@ -3,6 +3,16 @@
 #include <vector>
 #include "Tests.cpp"
 
+/**
+ * @brief Test function to debug.
+ *
+ * This function takes data information and dumps all information
+ * for debuggin purposes in a txt file.
+ *
+ * @param data_matrix Matrix with data
+ * @param class_vector Vector with characters as labels
+ * @param dataset Representative integer of the dataset
+ */
 void runTests(const std::vector<std::vector<double>> data_matrix,
               const std::vector<char> class_vector, int dataset)
 {
@@ -29,6 +39,18 @@ void runTests(const std::vector<std::vector<double>> data_matrix,
 
     // Restore cout
     std::cout.rdbuf(coutBuffer2);
+
+    // Redirect stdout to a text file for testKNNClassifier
+    std::ofstream outFile3("./files/tests/test_knn_classifier_" + std::to_string(dataset) + ".txt");
+    std::streambuf *coutBuffer3 = std::cout.rdbuf(); // Save cout buffer
+    std::cout.rdbuf(outFile3.rdbuf());               // Redirect cout to outFile3
+
+    std::cout << "-------- Test KNN Classifier --------\n"
+              << std::endl;
+    Tests::testKNNClassifier(data_matrix, class_vector, 3); // You can customize the k value
+
+    // Restore cout
+    std::cout.rdbuf(coutBuffer3);
 }
 
 int main(int argc, char *argv[])

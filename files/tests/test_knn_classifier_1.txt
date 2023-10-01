@@ -1,0 +1,4 @@
+-------- Test KNN Classifier --------
+
+Testing KNNClassifier with k = 3
+Predicted Class = 2

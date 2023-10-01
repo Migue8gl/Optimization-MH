@@ -6,7 +6,7 @@ project(GeneticAlgorithm)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 
 # Add the executable target
-add_executable(ga src/main.cpp src/ToolsHelper.cpp src/Tests.cpp)
+add_executable(ga src/main.cpp src/ToolsHelper.cpp src/Tests.cpp src/MLAlgorithms.cpp)
 
 # You can set C++ standards if needed
 set(CMAKE_CXX_STANDARD 20)  # Change to the desired C++ standard

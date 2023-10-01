@@ -11,6 +11,10 @@
 #include <limits>
 #include <random>
 
+/**
+ * @brief Utility class for handling data, reading and display operations.
+ *
+ */
 class ToolsHelper
 {
 public:
@@ -273,5 +277,23 @@ public:
         }
 
         return std::make_pair(partitions, partitions_classes);
+    }
+
+    /**
+     * @brief Function to calculate the Euclidean distance between two data points
+     * 
+     * @param point1 
+     * @param point2 
+     * @return double 
+     */
+    static double calculateEuclideanDistance(const std::vector<double> &point1, const std::vector<double> &point2)
+    {
+        double sum = 0.0;
+        for (size_t i = 0; i < point1.size(); ++i)
+        {
+            double diff = point1[i] - point2[i];
+            sum += diff * diff;
+        }
+        return sqrt(sum);
     }
 };

@@ -2,8 +2,12 @@
 #include <iostream>
 #include <vector>
 #include <map>
-#include "ToolsHelper.cpp"
+#include "MLAlgorithms.cpp"
 
+/**
+ * @brief Utility class for debugging
+ *
+ */
 class Tests
 {
 public:
@@ -69,5 +73,24 @@ public:
             // Separator line between partitions
             std::cout << "----------------------------------\n\n";
         }
+    }
+
+    /**
+     * @brief
+     *
+     * @param data_matrix
+     * @param class_vector
+     * @param k
+     */
+    static void testKNNClassifier(const std::vector<std::vector<double>> &data_matrix,
+                           const std::vector<char> &class_vector, int k = 1)
+    {
+        std::cout << "Testing KNNClassifier with k = " << k << std::endl;
+
+        // Test element (you can customize this)
+        std::vector<double> element = {2.5, 3.5};
+
+        char predictedClass = MLAlgorithms::KNNClassifier(data_matrix, element, class_vector, k);
+        std::cout << "Predicted Class = " << predictedClass << std::endl;
     }
 };
