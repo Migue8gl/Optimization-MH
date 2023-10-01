@@ -23,7 +23,7 @@ public:
      * @param data_matrix Matrix with data extracted from the file
      * @param class_vector Vector with the data classes
      */
-    void readDataARFF(const std::string &file, std::vector<std::vector<double>> &data_matrix, std::vector<char> &class_vector)
+    static void readDataARFF(const std::string &file, std::vector<std::vector<double>> &data_matrix, std::vector<char> &class_vector)
     {
         std::ifstream ifile(file);
         if (!ifile)
@@ -97,7 +97,7 @@ public:
      * @param data_matrix   Matrix with data to display
      * @param class_vector  Vector with class labels to display
      */
-    void displayDataInfo(const std::vector<std::vector<double>> &data_matrix, const std::vector<char> &class_vector, const std::string &separator = "\n")
+    static void displayDataInfo(const std::vector<std::vector<double>> &data_matrix, const std::vector<char> &class_vector, const std::string &separator = "\n")
     {
         if (data_matrix.empty() || class_vector.empty())
         {
@@ -150,7 +150,7 @@ public:
      *       If the maximum and minimum values in the data are the same, no normalization is applied
      *       to avoid division by zero.
      */
-    void normalizeData(std::vector<std::vector<double>> &data)
+    static void normalizeData(std::vector<std::vector<double>> &data)
     {
         if (data.empty() || data[0].empty())
         {
@@ -196,7 +196,7 @@ public:
      *             If not provided, a random seed is generated using std::random_device.
      * @return int A random integer value within the specified range [min, max].
      */
-    int generateRandomNumberInteger(int min, int max, std::random_device::result_type seed = std::random_device{}())
+    static int generateRandomNumberInteger(int min, int max, std::random_device::result_type seed = std::random_device{}())
     {
         std::random_device rd;
         std::mt19937 gen(seed);
@@ -214,7 +214,7 @@ public:
      *             If not provided, a random seed is generated using std::random_device.
      * @return int A random double value within the specified range [min, max].
      */
-    double generateRandomNumberDouble(double min, double max, std::random_device::result_type seed = std::random_device{}())
+    static double generateRandomNumberDouble(double min, double max, std::random_device::result_type seed = std::random_device{}())
     {
         std::random_device rd;
         std::mt19937 gen(seed);
@@ -240,7 +240,7 @@ public:
      *   - The first vector is a vector of vectors of doubles representing the data partitions.
      *   - The second vector is a vector of vectors of chars representing the class labels corresponding to the data partitions.
      */
-    std::pair<std::vector<std::vector<std::vector<double>>>, std::vector<std::vector<char>>> createPartitions(
+    static std::pair<std::vector<std::vector<std::vector<double>>>, std::vector<std::vector<char>>> createPartitions(
         const std::vector<std::vector<double>> &data_matrix,
         const std::vector<char> &class_vector,
         int k)
