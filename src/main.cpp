@@ -1,7 +1,10 @@
+#include <fstream>
 #include <iostream>
+#include <streambuf>
 #include <string>
 #include <vector>
-#include "Tests.cpp"
+#include "Tests.h"
+#include "ToolsHelper.h"
 
 /**
  * @brief Test function to debug.
@@ -9,12 +12,10 @@
  * This function takes data information and dumps all information
  * for debuggin purposes in a txt file.
  *
- * @param data_matrix Matrix with data
- * @param class_vector Vector with characters as labels
+ * @param data Instace of Data class, contains information about data labels and data points.
  * @param dataset Representative integer of the dataset
  */
-void runTests(const std::vector<std::vector<double>> data_matrix,
-              const std::vector<char> class_vector, int dataset)
+void runTests(const Data &data, int dataset)
 {
     // Redirect stdout to a text file for testPartitions
     std::ofstream outFile1("./files/tests/test_partitions_" + std::to_string(dataset) + ".txt");
@@ -23,7 +24,7 @@ void runTests(const std::vector<std::vector<double>> data_matrix,
 
     std::cout << "-------- Test particiones --------\n"
               << std::endl;
-    Tests::testPartitions(data_matrix, class_vector);
+    Tests::testPartitions(data);
 
     // Restore cout
     std::cout.rdbuf(coutBuffer1);
@@ -35,7 +36,7 @@ void runTests(const std::vector<std::vector<double>> data_matrix,
 
     std::cout << "-------- Test data reading --------\n"
               << std::endl;
-    Tests::testReadAndDisplayData(data_matrix, class_vector);
+    Tests::testReadAndDisplayData(data);
 
     // Restore cout
     std::cout.rdbuf(coutBuffer2);
@@ -47,7 +48,7 @@ void runTests(const std::vector<std::vector<double>> data_matrix,
 
     std::cout << "-------- Test KNN Classifier --------\n"
               << std::endl;
-    Tests::testKNNClassifier(data_matrix, class_vector, 3); // You can customize the k value
+    Tests::testKNNClassifier(data, 3); // You can customize the k value
 
     // Restore cout
     std::cout.rdbuf(coutBuffer3);
@@ -96,16 +97,13 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    std::vector<std::vector<double>> data_matrix;
-    std::vector<char> class_vector;
-
     try
     {
-        ToolsHelper::readDataARFF(path, data_matrix, class_vector);
+        Data data = ToolsHelper::readDataARFF(path);
 
         if (run_test)
         {
-            runTests(data_matrix, class_vector, option);
+            runTests(data, option);
         }
     }
     catch (const std::exception &e)

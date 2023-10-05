@@ -85,9 +85,9 @@ run_single_dataset() {
     if [ $dataset_index -ge 0 ] && [ $dataset_index -lt ${#Datasets[@]} ]; then
         dataset_name="${Datasets[$dataset_index]}"
         if [[ "$Test" == true ]]; then
-            ./build/bin/ga "$Seed" "$Dataset" "$Test" > "$ResultsDir/${dataset_name}_results.txt"
+            ./bin/ga "$Seed" "$Dataset" "$Test" > "$ResultsDir/${dataset_name}_results.txt"
         else
-            ./build/bin/ga "$Seed" "$Dataset" > "$ResultsDir/${dataset_name}_results.txt"
+            ./bin/ga "$Seed" "$Dataset" > "$ResultsDir/${dataset_name}_results.txt"
         fi
     else
         echo "Error: Invalid dataset index. Available datasets are 1, 2, and 3."

@@ -1,3 +1,0 @@
-/home/migue8gl/Desktop/Otros/C++/GA/build/CMakeFiles/ga.dir
-/home/migue8gl/Desktop/Otros/C++/GA/build/CMakeFiles/edit_cache.dir
-/home/migue8gl/Desktop/Otros/C++/GA/build/CMakeFiles/rebuild_cache.dir
