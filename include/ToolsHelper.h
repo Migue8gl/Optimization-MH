@@ -109,6 +109,8 @@ public:
      */
     static double computeAccuracy(const Data &sample, const std::vector<double> &weights);
 
+    static void execute(const std::vector<Data> &partitions, const std::string &option);
+
 private:
     // Static random number generator and distribution
     static std::mt19937 randomGenerator;

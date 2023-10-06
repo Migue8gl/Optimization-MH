@@ -1,0 +1,41 @@
+[PART 1] | Tasa_clas: 0.833333
+[PART 1] | Tasa_red: 0
+[PART 1] | Fitness: 0.416667
+[PART 1] | Tiempo_ejecucion: 0 ms
+
+-------------------------------------------
+
+[PART 2] | Tasa_clas: 0.814103
+[PART 2] | Tasa_red: 0
+[PART 2] | Fitness: 0.407051
+[PART 2] | Tiempo_ejecucion: 0 ms
+
+-------------------------------------------
+
+[PART 3] | Tasa_clas: 0.814103
+[PART 3] | Tasa_red: 0
+[PART 3] | Fitness: 0.407051
+[PART 3] | Tiempo_ejecucion: 0 ms
+
+-------------------------------------------
+
+[PART 4] | Tasa_clas: 0.865385
+[PART 4] | Tasa_red: 0
+[PART 4] | Fitness: 0.432692
+[PART 4] | Tiempo_ejecucion: 0 ms
+
+-------------------------------------------
+
+[PART 5] | Tasa_clas: 0.846154
+[PART 5] | Tasa_red: 0
+[PART 5] | Fitness: 0.423077
+[PART 5] | Tiempo_ejecucion: 0 ms
+
+-------------------------------------------
+
+***** (RESULTADOS FINALES) *****
+
+Tasa_clas_media: 0.834615
+Tasa_red_media: 0
+Fitness_medio: 0.417308
+Tiempo_ejecucion_medio: 9 ms

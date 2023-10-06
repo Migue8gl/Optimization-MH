@@ -1,5 +1,6 @@
 #include "ToolsHelper.h"
 #include "MLAlgorithms.h"
+#include <chrono>
 
 // Define and initialize the static members
 std::mt19937 ToolsHelper::randomGenerator;
@@ -242,4 +243,64 @@ double ToolsHelper::computeAccuracy(const Data &sample, const std::vector<double
     }
 
     return correctlyClassifiedInstances / static_cast<double>(totalInstances);
+}
+
+void ToolsHelper::execute(const std::vector<Data> &partitions, const std::string &option)
+{
+    const double alpha = 0.5;
+    double TS_media = 0, TR_media = 0, A_media = 0;
+
+    auto overallStartTime = std::chrono::high_resolution_clock::now();
+
+    for (int partitionIndex = 0; partitionIndex < partitions.size(); partitionIndex++)
+    {
+        const Data &trainingData = partitions[partitionIndex];
+        Data testData;
+        unsigned int reductionCount = 0;
+
+        for (int i = 0; i < partitions.size(); i++)
+        {
+            if (i != partitionIndex)
+            {
+                const std::vector<std::vector<double>> &otherData = partitions[i].getData();
+                const std::vector<char> &otherLabels = partitions[i].getLabels();
+                for (size_t j = 0; j < otherData.size(); j++)
+                {
+                    testData.addDataPoint(otherData[j], otherLabels[j]);
+                }
+            }
+        }
+
+        auto startTime = std::chrono::high_resolution_clock::now();
+
+        std::vector<double> weights(trainingData.getData()[0].size(), 1.0);
+
+        auto endTime = std::chrono::high_resolution_clock::now();
+        std::chrono::milliseconds executionTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
+
+        double classificationAccuracy = ToolsHelper::computeAccuracy(testData, weights);
+        double reductionRate = static_cast<double>(reductionCount) / static_cast<double>(weights.size());
+        double fitness = alpha * classificationAccuracy + (1.0 - alpha) * reductionRate;
+
+        TS_media += classificationAccuracy;
+        TR_media += reductionRate;
+        A_media += fitness;
+
+        std::cout << "[PART " << partitionIndex + 1 << "] | Tasa_clas: " << classificationAccuracy << std::endl;
+        std::cout << "[PART " << partitionIndex + 1 << "] | Tasa_red: " << reductionRate << std::endl;
+        std::cout << "[PART " << partitionIndex + 1 << "] | Fitness: " << fitness << std::endl;
+        std::cout << "[PART " << partitionIndex + 1 << "] | Tiempo_ejecucion: " << executionTime.count() << " ms\n\n";
+        std::cout << "-------------------------------------------\n"
+                  << std::endl;
+    }
+
+    auto overallEndTime = std::chrono::high_resolution_clock::now();
+    std::chrono::milliseconds totalTime = std::chrono::duration_cast<std::chrono::milliseconds>(overallEndTime - overallStartTime);
+
+    std::cout << "***** (RESULTADOS FINALES) *****\n"
+              << std::endl;
+    std::cout << "Tasa_clas_media: " << TS_media / partitions.size() << std::endl;
+    std::cout << "Tasa_red_media: " << TR_media / partitions.size() << std::endl;
+    std::cout << "Fitness_medio: " << A_media / partitions.size() << std::endl;
+    std::cout << "Tiempo_ejecucion_medio: " << totalTime.count() << " ms";
 }

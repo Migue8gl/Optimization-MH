@@ -10,6 +10,8 @@
 class MLAlgorithms
 {
 public:
+    // Define a function type for the algorithm
+    using AlgorithmFunction = char (*)(const Data &, const std::vector<double> &, const std::vector<double> &, int);
     /**
      * @brief Perform k-Nearest Neighbors (k-NN) classification to predict the class of an element.
      *

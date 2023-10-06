@@ -100,8 +100,11 @@ int main(int argc, char *argv[])
     try
     {
         Data data = ToolsHelper::readDataARFF(path);
+        ToolsHelper::normalizeData(data);
+        std::vector<Data> partitions = ToolsHelper::createPartitions(data, 5);
+        ToolsHelper::execute(partitions, "1");
 
-        if (run_test)
+        if (run_test) 
         {
             runTests(data, option);
         }
