@@ -15,7 +15,7 @@
  * @param data Instace of Data class, contains information about data labels and data points.
  * @param dataset Representative integer of the dataset
  */
-void runTests(const Data &data, int dataset)
+void runTests(const Data &data, int dataset) 
 {
     // Redirect stdout to a text file for testPartitions
     std::ofstream outFile1("./files/tests/test_partitions_" + std::to_string(dataset) + ".txt");

@@ -1,41 +1,41 @@
-[PART 1] | Tasa_clas: 0.833333
-[PART 1] | Tasa_red: 0
-[PART 1] | Fitness: 0.416667
-[PART 1] | Tiempo_ejecucion: 0 ms
+[PART 1] | Classification Rate: 0.846154
+[PART 1] | Reduction Rate: 0
+[PART 1] | Fitness: 0.423077
+[PART 1] | Execution Time: 2.745171 ms
 
 -------------------------------------------
 
-[PART 2] | Tasa_clas: 0.814103
-[PART 2] | Tasa_red: 0
-[PART 2] | Fitness: 0.407051
-[PART 2] | Tiempo_ejecucion: 0 ms
+[PART 2] | Classification Rate: 0.833333
+[PART 2] | Reduction Rate: 0.000000
+[PART 2] | Fitness: 0.416667
+[PART 2] | Execution Time: 1.838046 ms
 
 -------------------------------------------
 
-[PART 3] | Tasa_clas: 0.814103
-[PART 3] | Tasa_red: 0
-[PART 3] | Fitness: 0.407051
-[PART 3] | Tiempo_ejecucion: 0 ms
+[PART 3] | Classification Rate: 0.839744
+[PART 3] | Reduction Rate: 0.000000
+[PART 3] | Fitness: 0.419872
+[PART 3] | Execution Time: 1.843005 ms
 
 -------------------------------------------
 
-[PART 4] | Tasa_clas: 0.865385
-[PART 4] | Tasa_red: 0
-[PART 4] | Fitness: 0.432692
-[PART 4] | Tiempo_ejecucion: 0 ms
+[PART 4] | Classification Rate: 0.820513
+[PART 4] | Reduction Rate: 0.000000
+[PART 4] | Fitness: 0.410256
+[PART 4] | Execution Time: 1.844338 ms
 
 -------------------------------------------
 
-[PART 5] | Tasa_clas: 0.846154
-[PART 5] | Tasa_red: 0
-[PART 5] | Fitness: 0.423077
-[PART 5] | Tiempo_ejecucion: 0 ms
+[PART 5] | Classification Rate: 0.826923
+[PART 5] | Reduction Rate: 0.000000
+[PART 5] | Fitness: 0.413462
+[PART 5] | Execution Time: 1.843285 ms
 
 -------------------------------------------
 
-***** (RESULTADOS FINALES) *****
+***** (FINAL RESULTS) *****
 
-Tasa_clas_media: 0.834615
-Tasa_red_media: 0
-Fitness_medio: 0.417308
-Tiempo_ejecucion_medio: 9 ms
+Average Classification Rate: 0.833333
+Average Reduction Rate: 0.000000
+Average Fitness: 0.416667
+Total Execution Time: 10.27 ms

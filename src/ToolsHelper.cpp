@@ -1,5 +1,6 @@
 #include "ToolsHelper.h"
 #include "MLAlgorithms.h"
+#include <iomanip>
 #include <chrono>
 
 // Define and initialize the static members
@@ -248,12 +249,13 @@ double ToolsHelper::computeAccuracy(const Data &sample, const std::vector<double
 void ToolsHelper::execute(const std::vector<Data> &partitions, const std::string &option)
 {
     const double alpha = 0.5;
-    double TS_media = 0, TR_media = 0, A_media = 0;
+    double TS_average = 0, TR_average = 0, A_average = 0;
 
     auto overallStartTime = std::chrono::high_resolution_clock::now();
 
     for (int partitionIndex = 0; partitionIndex < partitions.size(); partitionIndex++)
     {
+        auto startTime = std::chrono::high_resolution_clock::now();
         const Data &trainingData = partitions[partitionIndex];
         Data testData;
         unsigned int reductionCount = 0;
@@ -271,36 +273,34 @@ void ToolsHelper::execute(const std::vector<Data> &partitions, const std::string
             }
         }
 
-        auto startTime = std::chrono::high_resolution_clock::now();
-
         std::vector<double> weights(trainingData.getData()[0].size(), 1.0);
-
-        auto endTime = std::chrono::high_resolution_clock::now();
-        std::chrono::milliseconds executionTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
 
         double classificationAccuracy = ToolsHelper::computeAccuracy(testData, weights);
         double reductionRate = static_cast<double>(reductionCount) / static_cast<double>(weights.size());
         double fitness = alpha * classificationAccuracy + (1.0 - alpha) * reductionRate;
 
-        TS_media += classificationAccuracy;
-        TR_media += reductionRate;
-        A_media += fitness;
+        TS_average += classificationAccuracy;
+        TR_average += reductionRate;
+        A_average += fitness;
 
-        std::cout << "[PART " << partitionIndex + 1 << "] | Tasa_clas: " << classificationAccuracy << std::endl;
-        std::cout << "[PART " << partitionIndex + 1 << "] | Tasa_red: " << reductionRate << std::endl;
+        auto endTime = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double, std::milli> executionTime = endTime - startTime;
+
+        std::cout << "[PART " << partitionIndex + 1 << "] | Classification Rate: " << classificationAccuracy << std::endl;
+        std::cout << "[PART " << partitionIndex + 1 << "] | Reduction Rate: " << reductionRate << std::endl;
         std::cout << "[PART " << partitionIndex + 1 << "] | Fitness: " << fitness << std::endl;
-        std::cout << "[PART " << partitionIndex + 1 << "] | Tiempo_ejecucion: " << executionTime.count() << " ms\n\n";
+        std::cout << "[PART " << partitionIndex + 1 << "] | Execution Time: " << std::fixed << std::setprecision(2) << executionTime.count() << " ms\n\n";
         std::cout << "-------------------------------------------\n"
                   << std::endl;
     }
 
     auto overallEndTime = std::chrono::high_resolution_clock::now();
-    std::chrono::milliseconds totalTime = std::chrono::duration_cast<std::chrono::milliseconds>(overallEndTime - overallStartTime);
+    std::chrono::duration<double, std::milli> totalTime = overallEndTime - overallStartTime;
 
-    std::cout << "***** (RESULTADOS FINALES) *****\n"
+    std::cout << "***** (FINAL RESULTS) *****\n"
               << std::endl;
-    std::cout << "Tasa_clas_media: " << TS_media / partitions.size() << std::endl;
-    std::cout << "Tasa_red_media: " << TR_media / partitions.size() << std::endl;
-    std::cout << "Fitness_medio: " << A_media / partitions.size() << std::endl;
-    std::cout << "Tiempo_ejecucion_medio: " << totalTime.count() << " ms";
+    std::cout << "Average Classification Rate: " << TS_average / partitions.size() << std::endl;
+    std::cout << "Average Reduction Rate: " << TR_average / partitions.size() << std::endl;
+    std::cout << "Average Fitness: " << A_average / partitions.size() << std::endl;
+    std::cout << "Total Execution Time: " << std::fixed << std::setprecision(2) << totalTime.count() << " ms";
 }

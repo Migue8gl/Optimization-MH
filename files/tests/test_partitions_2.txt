@@ -3,32 +3,32 @@
 Partition 1:
 ----------------------------------
 Class Counts in Partition 1:
-Class 1: 9 instances
-Class 2: 30 instances
+Class 1: 16 instances
+Class 2: 23 instances
 Total Instances in Partition 1: 39 instances
 ----------------------------------
 
 Partition 2:
 ----------------------------------
 Class Counts in Partition 2:
-Class 1: 19 instances
-Class 2: 20 instances
+Class 1: 9 instances
+Class 2: 30 instances
 Total Instances in Partition 2: 39 instances
 ----------------------------------
 
 Partition 3:
 ----------------------------------
 Class Counts in Partition 3:
-Class 1: 5 instances
-Class 2: 34 instances
+Class 1: 9 instances
+Class 2: 30 instances
 Total Instances in Partition 3: 39 instances
 ----------------------------------
 
 Partition 4:
 ----------------------------------
 Class Counts in Partition 4:
-Class 1: 7 instances
-Class 2: 32 instances
+Class 1: 6 instances
+Class 2: 33 instances
 Total Instances in Partition 4: 39 instances
 ----------------------------------
 
