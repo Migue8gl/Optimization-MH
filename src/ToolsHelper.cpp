@@ -2,11 +2,22 @@
 #include "MLAlgorithms.h"
 #include <iomanip>
 #include <chrono>
+#include <cctype>
 
 // Define and initialize the static members
 std::mt19937 ToolsHelper::randomGenerator;
 std::uniform_int_distribution<int> ToolsHelper::randomIntDistribution;
 std::uniform_real_distribution<double> ToolsHelper::randomRealDistribution;
+
+std::string ToolsHelper::toUpperCase(const std::string &str)
+{
+    std::string result = str;
+    for (char &c : result)
+    {
+        c = std::toupper(c);
+    }
+    return result;
+}
 
 Data ToolsHelper::readDataARFF(const std::string &file)
 {

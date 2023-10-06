@@ -48,9 +48,10 @@ while getopts ":ps:d:t:" opt; do
             fi
             ;;
         t)
-            if [[ "$OPTARG" == "TRUE" || "$OPTARG" == "true" || "$OPTARG" == "1" ]]; then
+            uppercase_optarg=$(echo "$OPTARG" | tr '[:lower:]' '[:upper:]')
+            if [[ "$uppercase_optarg" == "TRUE" || "$uppercase_optarg" == "true" || "$uppercase_optarg" == "1" ]]; then
                 Test=true
-            elif [[ "$OPTARG" == "FALSE" || "$OPTARG" == "false" || "$OPTARG" == "0" ]]; then
+            elif [[ "$uppercase_optarg" == "FALSE" || "$uppercase_optarg" == "false" || "$uppercase_optarg" == "0" ]]; then
                 Test=false
             else
                 echo "Error: The -t option requires TRUE or FALSE as the argument."

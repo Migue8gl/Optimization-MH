@@ -24,6 +24,16 @@ class ToolsHelper
 {
 public:
     /**
+     * @brief Converts a given string to uppercase.
+     *
+     * This function takes a string as input and converts all its characters to uppercase.
+     *
+     * @param str The input string to be converted to uppercase.
+     * @return The uppercase version of the input string.
+     */
+    static std::string toUpperCase(const std::string &str);
+
+    /**
      * @brief Read data from an ARFF file and extract its data and classes.
      *
      * This function reads data from an ARFF file and extracts the data into a matrix and the classes into a vector.

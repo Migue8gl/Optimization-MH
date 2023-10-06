@@ -67,13 +67,13 @@ int main(int argc, char *argv[])
     // Parse command-line arguments
     double Seed = std::stod(argv[1]);
     int option = std::stoi(argv[2]);
-    std::string path;
+    std::string path;   
     bool run_test = false;
 
     if (argc >= 4)
     {
         std::string testOption = argv[3];
-        if (testOption == "true" || testOption == "TRUE" || testOption == "1")
+        if (ToolsHelper::toUpperCase(testOption) == "TRUE" || testOption == "1")
         {
             run_test = true;
         }

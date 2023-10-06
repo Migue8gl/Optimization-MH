@@ -1,41 +1,41 @@
 [PART 1] | Classification Rate: 0.846154
 [PART 1] | Reduction Rate: 0
 [PART 1] | Fitness: 0.423077
-[PART 1] | Execution Time: 2.745171 ms
+[PART 1] | Execution Time: 1.84 ms
 
 -------------------------------------------
 
-[PART 2] | Classification Rate: 0.833333
-[PART 2] | Reduction Rate: 0.000000
-[PART 2] | Fitness: 0.416667
-[PART 2] | Execution Time: 1.838046 ms
+[PART 2] | Classification Rate: 0.83
+[PART 2] | Reduction Rate: 0.00
+[PART 2] | Fitness: 0.42
+[PART 2] | Execution Time: 2.04 ms
 
 -------------------------------------------
 
-[PART 3] | Classification Rate: 0.839744
-[PART 3] | Reduction Rate: 0.000000
-[PART 3] | Fitness: 0.419872
-[PART 3] | Execution Time: 1.843005 ms
+[PART 3] | Classification Rate: 0.87
+[PART 3] | Reduction Rate: 0.00
+[PART 3] | Fitness: 0.44
+[PART 3] | Execution Time: 1.85 ms
 
 -------------------------------------------
 
-[PART 4] | Classification Rate: 0.820513
-[PART 4] | Reduction Rate: 0.000000
-[PART 4] | Fitness: 0.410256
-[PART 4] | Execution Time: 1.844338 ms
+[PART 4] | Classification Rate: 0.86
+[PART 4] | Reduction Rate: 0.00
+[PART 4] | Fitness: 0.43
+[PART 4] | Execution Time: 1.86 ms
 
 -------------------------------------------
 
-[PART 5] | Classification Rate: 0.826923
-[PART 5] | Reduction Rate: 0.000000
-[PART 5] | Fitness: 0.413462
-[PART 5] | Execution Time: 1.843285 ms
+[PART 5] | Classification Rate: 0.86
+[PART 5] | Reduction Rate: 0.00
+[PART 5] | Fitness: 0.43
+[PART 5] | Execution Time: 1.89 ms
 
 -------------------------------------------
 
 ***** (FINAL RESULTS) *****
 
-Average Classification Rate: 0.833333
-Average Reduction Rate: 0.000000
-Average Fitness: 0.416667
-Total Execution Time: 10.27 ms
+Average Classification Rate: 0.85
+Average Reduction Rate: 0.00
+Average Fitness: 0.43
+Total Execution Time: 9.60 ms
