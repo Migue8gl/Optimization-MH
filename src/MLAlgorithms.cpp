@@ -7,7 +7,7 @@
 #include "MLAlgorithms.h"
 #include "ToolsHelper.h"
 
-char MLAlgorithms::KNNClassifier(const Data &data, const std::vector<double> &element, int k)
+char MLAlgorithms::KNNClassifier(const Data &data, const std::vector<double> &element, const std::vector<double> &weigths, int k)
 {
     {
         size_t dataSize = data.size();
@@ -25,7 +25,7 @@ char MLAlgorithms::KNNClassifier(const Data &data, const std::vector<double> &el
         {
             if (element != dataMatrix[i])
             { // Skip the same element
-                double distance = ToolsHelper::calculateEuclideanDistance(element, dataMatrix[i]);
+                double distance = ToolsHelper::computeEuclideanDistance(element, dataMatrix[i], weigths);
                 distancesAndClasses.emplace_back(distance, dataLabels[i]);
             }
         }

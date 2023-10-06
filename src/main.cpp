@@ -48,7 +48,7 @@ void runTests(const Data &data, int dataset)
 
     std::cout << "-------- Test KNN Classifier --------\n"
               << std::endl;
-    Tests::testKNNClassifier(data, 3); // You can customize the k value
+    Tests::testKNNClassifier(data, 10); // You can customize the k value
 
     // Restore cout
     std::cout.rdbuf(coutBuffer3);

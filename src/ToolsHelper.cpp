@@ -1,4 +1,5 @@
 #include "ToolsHelper.h"
+#include "MLAlgorithms.h"
 
 // Define and initialize the static members
 std::mt19937 ToolsHelper::randomGenerator;
@@ -209,13 +210,36 @@ std::vector<Data> ToolsHelper::createPartitions(const Data &data, int k)
     return partitions;
 }
 
-double ToolsHelper::calculateEuclideanDistance(const std::vector<double> &point1, const std::vector<double> &point2)
+double ToolsHelper::computeEuclideanDistance(const std::vector<double> &point1, const std::vector<double> &point2, const std::vector<double> &weights)
 {
+    if (point1.size() != point2.size() || point1.size() != weights.size())
+    {
+        throw std::invalid_argument("Vector dimensions and weights must match.");
+    }
+
     double sum = 0.0;
     for (size_t i = 0; i < point1.size(); ++i)
     {
         double diff = point1[i] - point2[i];
-        sum += diff * diff;
+        sum += weights[i] * (diff * diff);
     }
     return sqrt(sum);
+}
+
+double ToolsHelper::computeAccuracy(const Data &sample, const std::vector<double> &weights)
+{
+    double correctlyClassifiedInstances = 0.0;
+    const std::vector<std::vector<double>> &samples = sample.getData();
+    const std::vector<char> &classes = sample.getLabels();
+    size_t totalInstances = sample.size();
+
+    for (size_t i = 0; i < totalInstances; ++i)
+    {
+        char predictedClass = MLAlgorithms::KNNClassifier(sample, samples[i], weights);
+
+        if (predictedClass == classes[i])
+            correctlyClassifiedInstances += 1.0;
+    }
+
+    return correctlyClassifiedInstances / static_cast<double>(totalInstances);
 }
