@@ -5,6 +5,7 @@
 #include <vector>
 #include "tests.h"
 #include "tools_helper.h"
+#include "seed.h"
 
 /**
  * @brief Test function to debug.
@@ -65,7 +66,7 @@ int main(int argc, char *argv[])
     }
 
     // Parse command-line arguments
-    double Seed = std::stod(argv[1]);
+    Seed::getInstance().setSeed(std::stod(argv[1]));
     int option = std::stoi(argv[2]);
     std::string path;
     bool run_test = false;

@@ -1,5 +1,5 @@
-#include "ToolsHelper.h"
-#include "MLAlgorithms.h"
+#include "tools_helper.h"
+#include "ml_tools.h"
 #include <iomanip>
 #include <chrono>
 #include <cctype>
@@ -145,7 +145,7 @@ double ToolsHelper::computeAccuracy(const Data &sample, const std::vector<double
 
     for (size_t i = 0; i < totalInstances; ++i)
     {
-        char predictedClass = MLAlgorithms::KNNClassifier(sample, samples[i], weights);
+        char predictedClass = MLTools::KNNClassifier(sample, samples[i], weights);
 
         if (predictedClass == classes[i])
             correctlyClassifiedInstances += 1.0;

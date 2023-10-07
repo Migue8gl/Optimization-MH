@@ -2,6 +2,7 @@
 #include "tools_helper.h"
 #include "ml_tools.h"
 #include <map>
+#include "seed.h"
 
 void Tests::testReadAndDisplayData(const Data &data)
 {
@@ -51,7 +52,8 @@ void Tests::testKNNClassifier(const Data &data, int k)
     std::cout << "Testing KNNClassifier with k = " << k << std::endl;
 
     // Test element (you can customize this)
-    int randomIndex = ToolsHelper::generateRandomNumberInteger(0, data.size() - 1);
+    int seed = Seed::getInstance().getSeed();
+    int randomIndex = ToolsHelper::generateRandomNumberInteger(0, data.size() - 1, seed);
     std::vector<double> element = data.getData()[randomIndex];
     std::vector<double> weights(data.getData()[0].size(), 1.0);
 

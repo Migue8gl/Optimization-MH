@@ -1,15 +1,11 @@
 #include "data.h"
+#include "seed.h"
 
 Data::Data() : data(), labels() {}
 
-Data::Data(std::vector<std::vector<double>> data, std::vector<char> labels)
-    : data(data), labels(labels)
-{
-}
+Data::Data(std::vector<std::vector<double>> data, std::vector<char> labels) : data(data), labels(labels) {}
 
-Data::~Data()
-{
-}
+Data::~Data() {}
 
 const std::vector<std::vector<double>> &Data::getData() const
 {
@@ -138,8 +134,7 @@ std::vector<Data> Data::createPartitions(int k) const
         shuffled_data.push_back(std::make_pair(data_matrix[i], class_vector[i]));
     }
 
-    std::random_device rd;
-    std::mt19937 gen(rd());
+    std::mt19937 gen(Seed::getInstance().getSeed());
     std::shuffle(shuffled_data.begin(), shuffled_data.end(), gen);
 
     // Initialize partitions
