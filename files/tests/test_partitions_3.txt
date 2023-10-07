@@ -11,16 +11,16 @@ Total Instances in Partition 1: 71 instances
 Partition 2:
 ----------------------------------
 Class Counts in Partition 2:
-Class b: 23 instances
-Class g: 47 instances
+Class b: 22 instances
+Class g: 48 instances
 Total Instances in Partition 2: 70 instances
 ----------------------------------
 
 Partition 3:
 ----------------------------------
 Class Counts in Partition 3:
-Class b: 27 instances
-Class g: 43 instances
+Class b: 28 instances
+Class g: 42 instances
 Total Instances in Partition 3: 70 instances
 ----------------------------------
 

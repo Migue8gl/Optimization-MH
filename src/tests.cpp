@@ -57,12 +57,6 @@ void Tests::testKNNClassifier(const Data &data, int k)
     std::vector<double> element = data.getData()[randomIndex];
     std::vector<double> weights(data.getData()[0].size(), 1.0);
 
-    // Generate random values for 'element'
-    for (int i = 0; i < element.size(); i++)
-    {
-        element[i] = ToolsHelper::generateRandomNumberDouble(0.0, 1.0);
-    }
-
     // Compute the predicted class
     char predictedClass = MLTools::KNNClassifier(data, element, weights, k);
 
