@@ -2,6 +2,11 @@
 #define DATA_H
 
 #include <vector>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <algorithm>
+#include <random>
 
 /**
  * @brief Utility class for storage and handling data.
@@ -77,6 +82,28 @@ public:
      * @return The number of data points.
      */
     std::size_t size() const;
+
+    /**
+     * @brief Read data from an ARFF file and extract its data and classes.
+     *
+     * This function reads data from an ARFF file and extracts the data into a matrix and the classes into a vector.
+     *
+     * @param file The ARFF file to read.
+     * @param data Instace of Data class, contains information about data labels and data points.
+     */
+    void readDataARFF(const std::string &file);
+
+    /**
+     * @brief Create partitions of data and class labels.
+     *
+     * This function partitions one data instance k partitions.
+     * The data is shuffled before partitioning to ensure randomness.
+     *
+     * @param k The number of partitions to create.
+     * @throws std::invalid_argument If k is not within a valid range.
+     * @return A vector containing data partitions.
+     */
+    std::vector<Data> createPartitions(int k);
 };
 
 #endif // DATA_H

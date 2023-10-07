@@ -3,12 +3,8 @@
 
 #include <vector>
 #include <string>
-#include <iostream>
-#include <fstream>
-#include <sstream>
 #include <stdexcept>
 #include <set>
-#include <algorithm>
 #include <limits>
 #include <random>
 #include "Data.h"
@@ -32,16 +28,6 @@ public:
      * @return The uppercase version of the input string.
      */
     static std::string toUpperCase(const std::string &str);
-
-    /**
-     * @brief Read data from an ARFF file and extract its data and classes.
-     *
-     * This function reads data from an ARFF file and extracts the data into a matrix and the classes into a vector.
-     *
-     * @param file The ARFF file to read.
-     * @param data Instace of Data class, contains information about data labels and data points.
-     */
-    static Data readDataARFF(const std::string &file);
 
     /**
      * @brief Display the contents of a data matrix and class vector in a tabular format.
@@ -83,19 +69,6 @@ public:
      * @return A random double value within the specified range [min, max].
      */
     static double generateRandomNumberDouble(double min, double max, std::random_device::result_type seed = std::random_device{}());
-
-    /**
-     * @brief Create partitions of data and class labels.
-     *
-     * This function partitions one data instance k partitions.
-     * The data is shuffled before partitioning to ensure randomness.
-     *
-     * @param data Instace of Data class, contains information about data labels and data points.
-     * @param k The number of partitions to create.
-     * @throws std::invalid_argument If k is not within a valid range.
-     * @return A vector containing data partitions.
-     */
-    static std::vector<Data> createPartitions(const Data &data, int k);
 
     /**
      * @brief Calculate the Euclidean distance between two data points.
