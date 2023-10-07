@@ -3,8 +3,8 @@
 #include <streambuf>
 #include <string>
 #include <vector>
-#include "Tests.h"
-#include "ToolsHelper.h"
+#include "tests.h"
+#include "tools_helper.h"
 
 /**
  * @brief Test function to debug.
@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
     default:
         std::cerr << "[ERROR] Unrecognized parameter." << std::endl;
         std::cerr << "You must specify the dataset: 1=spectf-heart, 2=parkinsons, 3=ionosphere." << std::endl;
-        std::cerr << "Usage: ./main {seed} [1-3]" << std::endl;
+        std::cerr << "Usage: ./main {seed} [1-3] {run_tests}" << std::endl;
         return 1;
     }
 

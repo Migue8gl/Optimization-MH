@@ -1,6 +1,6 @@
-#include "Tests.h"
-#include "ToolsHelper.h"
-#include "MLAlgorithms.h"
+#include "tests.h"
+#include "tools_helper.h"
+#include "ml_tools.h"
 #include <map>
 
 void Tests::testReadAndDisplayData(const Data &data)
@@ -10,7 +10,7 @@ void Tests::testReadAndDisplayData(const Data &data)
 
 void Tests::testPartitions(const Data &data, int k)
 {
-    std::vector<Data> partitions = ToolsHelper::createPartitions(data, k);
+    std::vector<Data> partitions = data.createPartitions(k);
 
     // Display partition information (for demonstration)
     for (int i = 0; i < k; ++i)
@@ -62,7 +62,7 @@ void Tests::testKNNClassifier(const Data &data, int k)
     }
 
     // Compute the predicted class
-    char predictedClass = MLAlgorithms::KNNClassifier(data, element, weights, k);
+    char predictedClass = MLTools::KNNClassifier(data, element, weights, k);
 
     // Get the true class label (assuming it's available in the 'data' object)
     char trueClass = data.getLabels()[randomIndex];

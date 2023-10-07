@@ -1,7 +1,7 @@
 #ifndef TESTS_H
 #define TESTS_H
 
-#include "Data.h"
+#include "data.h"
 
 /**
  * @brief Utility class for debugging and testing machine learning algorithms.

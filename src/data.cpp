@@ -1,4 +1,4 @@
-#include "Data.h"
+#include "data.h"
 
 Data::Data() : data(), labels() {}
 
@@ -121,7 +121,7 @@ void Data::readDataARFF(const std::string &file)
     this->setLabels(labels);
 }
 
-std::vector<Data> Data::createPartitions(int k)
+std::vector<Data> Data::createPartitions(int k) const
 {
     const std::vector<std::vector<double>> &data_matrix = this->getData();
     const std::vector<char> &class_vector = this->getLabels();

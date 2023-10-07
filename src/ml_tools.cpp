@@ -4,10 +4,10 @@
 #include <stdexcept>
 #include <algorithm>
 #include <unordered_map>
-#include "MLAlgorithms.h"
-#include "ToolsHelper.h"
+#include "ml_tools.h"
+#include "tools_helper.h"
 
-char MLAlgorithms::KNNClassifier(const Data &data, const std::vector<double> &element, const std::vector<double> &weigths, int k)
+char MLTools::KNNClassifier(const Data &data, const std::vector<double> &element, const std::vector<double> &weigths, int k)
 {
     {
         size_t dataSize = data.size();

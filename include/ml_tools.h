@@ -1,13 +1,13 @@
-#ifndef ML_ALGORITHMS_H
-#define ML_ALGORITHMS_H
+#ifndef ML_TOOLS_H
+#define ML_TOOLS_H
 
 #include <vector>
-#include "Data.h" // You should include the appropriate header for the Data class here
+#include "data.h" // You should include the appropriate header for the Data class here
 
 /**
  * @brief Utility class containing machine learning algorithms.
  */
-class MLAlgorithms
+class MLTools
 {
 public:
     // Define a function type for the algorithm
@@ -29,4 +29,4 @@ public:
     static char KNNClassifier(const Data &data, const std::vector<double> &element, const std::vector<double> &weigths, int k = 1);
 };
 
-#endif // ML_ALGORITHMS_H
+#endif // ML_TOOLS_H

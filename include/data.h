@@ -103,7 +103,7 @@ public:
      * @throws std::invalid_argument If k is not within a valid range.
      * @return A vector containing data partitions.
      */
-    std::vector<Data> createPartitions(int k);
+    std::vector<Data> createPartitions(int k) const;
 };
 
 #endif // DATA_H

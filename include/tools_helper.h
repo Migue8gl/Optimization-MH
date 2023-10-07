@@ -1,5 +1,5 @@
-#ifndef TOOLSHELPER_H
-#define TOOLSHELPER_H
+#ifndef TOOLS_HELPER_H
+#define TOOLS_HELPER_H
 
 #include <vector>
 #include <string>
@@ -7,7 +7,7 @@
 #include <set>
 #include <limits>
 #include <random>
-#include "Data.h"
+#include "data.h"
 
 /**
  * @brief Utility class for handling data, reading, and display operations.
@@ -101,4 +101,4 @@ private:
     static std::uniform_real_distribution<double> randomRealDistribution;
 };
 
-#endif // TOOLSHELPER_H
+#endif // TOOLS_HELPER_H
