@@ -40,6 +40,29 @@ public:
      * @param k The number of neighbors (k) for testing the KNN classifier (default is 1).
      */
     static void testKNNClassifier(const Data &data, int k = 1);
+
+    /**
+     * @brief Test and print information about shuffled data.
+     *
+     * This function takes a Data object, shuffles its contents multiple times using
+     * the specified seed value, and prints information about the data before and after each shuffle.
+     *
+     * @param data The Data object to be shuffled and tested.
+     * @param seedValue The seed value used for random shuffling.
+     * @param numShuffles The number of times to shuffle the data.
+     */
+    static void testShuffledData(const Data &data, int seedValue, int numShuffles);
+
+    /**
+     * @brief Print information about the given Data object.
+     *
+     * This function prints details about the Data object, including the number of data points,
+     * the number of features per data point, and the first few data points with their labels.
+     *
+     * @param data The Data object to be described.
+     */
+private:
+    static void printDataInfo(const Data &data);
 };
 
 #endif // TESTS_H

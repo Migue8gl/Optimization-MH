@@ -105,3 +105,47 @@ void Tests::testKNNClassifier(const Data &data, int k)
         std::cout << "Prediction is incorrect." << std::endl;
     }
 }
+
+void Tests::printDataInfo(const Data &data)
+{
+    const std::vector<std::vector<double>> &dataMatrix = data.getData();
+    const std::vector<char> &labels = data.getLabels();
+
+    std::cout << "---------------------------------" << std::endl;
+
+    std::cout << "\nFirst few data points:" << std::endl;
+    for (size_t i = 0; i < std::min<size_t>(5, data.size()); ++i)
+    {
+        std::cout << "Data point " << i + 1 << ": ";
+        for (size_t j = 0; j < dataMatrix[i].size(); ++j)
+        {
+            if (j > 0)
+                std::cout << ", ";
+            std::cout << dataMatrix[i][j];
+        }
+        std::cout << " (Label: " << labels[i] << ")\n"
+                  << std::endl;
+    }
+    std::cout << "---------------------------------" << std::endl;
+}
+
+void Tests::testShuffledData(const Data &data, int seedValue, int numShuffles)
+{
+    std::cout << "Data Info Before Shuffling (Seed: " << seedValue << "):" << std::endl;
+    Tests::printDataInfo(data);
+
+    for (int i = 1; i <= numShuffles; ++i)
+    {
+        std::mt19937 rng(seedValue); // Reinitialize the random number generator with the same seed
+        std::vector<std::vector<double>> shuffledData = data.getData();
+        std::vector<char> shuffledLabels = data.getLabels();
+
+        std::shuffle(shuffledData.begin(), shuffledData.end(), rng);
+        std::shuffle(shuffledLabels.begin(), shuffledLabels.end(), rng);
+
+        Data shuffledDataObject(shuffledData, shuffledLabels);
+
+        std::cout << "\nData Info After Shuffling " << i << " Time(s):" << std::endl;
+        Tests::printDataInfo(shuffledDataObject);
+    }
+}
