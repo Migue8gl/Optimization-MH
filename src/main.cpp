@@ -15,7 +15,7 @@
  * @param data Instace of Data class, contains information about data labels and data points.
  * @param dataset Representative integer of the dataset
  */
-void runTests(const Data &data, int dataset) 
+void runTests(const Data &data, int dataset)
 {
     // Redirect stdout to a text file for testPartitions
     std::ofstream outFile1("./files/tests/test_partitions_" + std::to_string(dataset) + ".txt");
@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
     // Parse command-line arguments
     double Seed = std::stod(argv[1]);
     int option = std::stoi(argv[2]);
-    std::string path;   
+    std::string path;
     bool run_test = false;
 
     if (argc >= 4)
@@ -99,12 +99,13 @@ int main(int argc, char *argv[])
 
     try
     {
-        Data data = ToolsHelper::readDataARFF(path);
+        Data data;
+        data.readDataARFF(path);
         ToolsHelper::normalizeData(data);
-        std::vector<Data> partitions = ToolsHelper::createPartitions(data, 5);
+        std::vector<Data> partitions = data.createPartitions(5);
         ToolsHelper::execute(partitions, "1");
 
-        if (run_test) 
+        if (run_test)
         {
             runTests(data, option);
         }
