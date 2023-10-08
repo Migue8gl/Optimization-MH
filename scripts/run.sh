@@ -1,78 +1,53 @@
 #!/bin/bash
 
+#!/bin/bash
+
 # Function to show help information
 show_help() {
-    echo "Usage: $0 [-p] -s SEED [-d DATASET] [-t TRUE/FALSE]"
+    echo "Usage: $0 [-p] [-t] [-h] [-s SEED] [-d DATASET]"
     echo "  -p           Parallel execution (optional)"
-    echo "  -s SEED      Seed for random number generation (required)"
-    echo "  -d DATASET   Dataset to process (1, 2, 3) (optional, only if needed)"
+    echo "  -s SEED      Seed for random number generation (optional)"
+    echo "  -d DATASET   Dataset to process (1, 2, 3) (optional)"
     echo "  -t TEST      Activate test to dump debug info into txt files (optional)"
+    echo "  -h HELP      Show this help message and exit"
     exit 1
 }
 
-# Check if no arguments were provided
-if [ $# -eq 0 ]; then
-    echo "Error: No arguments provided."
-    show_help
-fi
-
-# Variables
+# Variables with default values
 Parallel=false
 Seed=""
 Dataset=""
-Test=false  # New variable for -t option
+Test=false
 
 # Define the directory for results
 ResultsDir="./files/results"
 
 # Process command line arguments
-while getopts ":ps:d:t:" opt; do
+while getopts "ps:d:t:h" opt; do
     case $opt in
         p)
             Parallel=true
             ;;
         s)
-            if [[ -n "$OPTARG" ]]; then
-                Seed="$OPTARG"
-            else
-                echo "Error: The -s option requires a seed value."
-                show_help
-            fi
+            Seed="$OPTARG"
             ;;
         d)
-            if [[ -n "$OPTARG" ]]; then
-                Dataset="$OPTARG"
-            else
-                echo "Error: The -d option requires a dataset value."
-                show_help
-            fi
+            Dataset="$OPTARG"
             ;;
         t)
-            uppercase_optarg=$(echo "$OPTARG" | tr '[:lower:]' '[:upper:]')
-            if [[ "$uppercase_optarg" == "TRUE" || "$uppercase_optarg" == "true" || "$uppercase_optarg" == "1" ]]; then
-                Test=true
-            elif [[ "$uppercase_optarg" == "FALSE" || "$uppercase_optarg" == "false" || "$uppercase_optarg" == "0" ]]; then
-                Test=false
-            else
-                echo "Error: The -t option requires TRUE or FALSE as the argument."
-                show_help
-            fi
+            Test=true
+            ;;
+        h)
+            show_help
+            ;;
+        \?)
+            echo "Invalid option: -$OPTARG" >&2
+            show_help
             ;;
     esac
 done
 
-# If -help or --help is provided, show help and exit without error
-if [[ "$1" == "-help" || "$1" == "-h" ]]; then
-    show_help
-fi
-
-# Check if Seed is provided (it's always required)
-if [[ -z "$Seed" ]]; then
-    echo "Error: The -s (Seed) option is required."
-    show_help
-fi
-
-# Verificar si el directorio de resultados existe, si no, crearlo
+# Create results directory if it doesn't exist
 if [ ! -d "$ResultsDir" ]; then
     mkdir -p "$ResultsDir"
 fi
@@ -85,16 +60,30 @@ run_single_dataset() {
     dataset_index=$((Dataset - 1))
     if [ $dataset_index -ge 0 ] && [ $dataset_index -lt ${#Datasets[@]} ]; then
         dataset_name="${Datasets[$dataset_index]}"
-        if [[ "$Test" == true ]]; then
-            ./bin/ga "$Seed" "$Dataset" "$Test" > "$ResultsDir/${dataset_name}_results.txt"
-        else
-            ./bin/ga "$Seed" "$Dataset" > "$ResultsDir/${dataset_name}_results.txt"
+        
+        # Build the command with options based on provided values
+        cmd="./bin/ga"
+
+        if [ -n "$Seed" ]; then
+            cmd="$cmd -s $Seed"
         fi
+
+        if [ -n "$Dataset" ]; then
+            cmd="$cmd -d $Dataset"
+        fi
+
+        if [ "$Test" == true ]; then
+            cmd="$cmd -t"
+        fi
+
+        # Execute the command
+        $cmd > "$ResultsDir/${dataset_name}_results.txt"
     else
         echo "Error: Invalid dataset index. Available datasets are 1, 2, and 3."
         show_help
     fi
 }
+
 
 # If -p is provided, execute all datasets in parallel
 if [[ "$Parallel" == true ]]; then

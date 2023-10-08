@@ -69,7 +69,7 @@ void runTests(const Data &data, int dataset)
 
 int main(int argc, char *argv[])
 {
-    if (argc > 7)
+    if (argc > 6)
     {
         std::cerr << "[ERROR] Incorrect number of arguments." << std::endl;
         std::cerr << "Usage: ./main -s {seed} -d {dataset}[1-3] -t {run_tests}" << std::endl;
@@ -97,11 +97,7 @@ int main(int argc, char *argv[])
 
         else if (sarg == "-t")
         {
-            std::string testOption = argv[i++];
-            if (ToolsHelper::toUpperCase(testOption) == "TRUE" || testOption == "1")
-            {
-                run_test = true;
-            }
+            run_test = true;
         }
         else
         {

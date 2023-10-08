@@ -1,44 +1,46 @@
+<------------------ SPECTF-Heart ------------------>
 
-***** (FITTING) *****
+***** (CROSS VALIDATION K = 5) *****
 
-[PART 1] | Classification Rate: 0.709677
+[PART 1] | Classification Rate: 0.734767
 [PART 1] | Reduction Rate: 0
-[PART 1] | Fitness: 0.354839
-[PART 1] | Execution Time: 7.87 ms
+[PART 1] | Fitness: 0.367384
+[PART 1] | Execution Time: 9.43 ms
 
--------------------------------------------
+--------------------------------------
 
-[PART 2] | Classification Rate: 0.71
+[PART 2] | Classification Rate: 0.72
 [PART 2] | Reduction Rate: 0.00
 [PART 2] | Fitness: 0.36
-[PART 2] | Execution Time: 7.99 ms
+[PART 2] | Execution Time: 9.22 ms
 
--------------------------------------------
+--------------------------------------
 
 [PART 3] | Classification Rate: 0.73
 [PART 3] | Reduction Rate: 0.00
 [PART 3] | Fitness: 0.37
-[PART 3] | Execution Time: 7.65 ms
+[PART 3] | Execution Time: 8.82 ms
 
--------------------------------------------
+--------------------------------------
 
-[PART 4] | Classification Rate: 0.72
+[PART 4] | Classification Rate: 0.71
 [PART 4] | Reduction Rate: 0.00
-[PART 4] | Fitness: 0.36
-[PART 4] | Execution Time: 8.06 ms
+[PART 4] | Fitness: 0.35
+[PART 4] | Execution Time: 9.08 ms
 
--------------------------------------------
+--------------------------------------
 
-[PART 5] | Classification Rate: 0.74
+[PART 5] | Classification Rate: 0.72
 [PART 5] | Reduction Rate: 0.00
-[PART 5] | Fitness: 0.37
-[PART 5] | Execution Time: 7.55 ms
+[PART 5] | Fitness: 0.36
+[PART 5] | Execution Time: 8.74 ms
 
--------------------------------------------
+--------------------------------------
 
 ***** (FINAL RESULTS) *****
 
 Average Classification Rate: 0.72
 Average Reduction Rate: 0.00
 Average Fitness: 0.36
-Total Execution Time: 39.42 ms
+Total Execution Time: 45.66 ms
+
