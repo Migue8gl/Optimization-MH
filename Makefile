@@ -1,14 +1,19 @@
 CXX = clang++
-CXXFLAGS = -std=c++20 -O2 -I./include
+CXXFLAGS = -std=c++2a -O2 -I./include
 SRCDIR = src
+FILEDIR = files
+INCDIR = include
+SCRPDIR = scripts
+DATADIR = data
 OBJDIR = obj
 BINDIR = bin
 
 SRCS = $(wildcard $(SRCDIR)/*.cpp)
 OBJS = $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SRCS))
 EXEC = $(BINDIR)/ga
+TARFILE = ga.tar.gz
 
-.PHONY: all clean directories
+.PHONY: all clean directories compress
 
 all: directories $(EXEC)
 
@@ -23,4 +28,7 @@ directories:
 
 clean:
 	rm -rf $(OBJDIR) $(BINDIR)
+
+compress:
+	tar -czvf $(TARFILE) $(SRCDIR) $(INCDIR) $(FILEDIR) $(SCRPDIR) $(DATADIR) Makefile README.txt
 
