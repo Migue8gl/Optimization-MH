@@ -138,12 +138,12 @@ int main(int argc, char *argv[])
     {
         for (const std::string &p : path)
         {
-            std::cout << "<------------ " << ToolsHelper::getDatasetTitle(option + cont) << " ------------>" << std::endl;
+            std::cout << "<------------------ " << ToolsHelper::getDatasetTitle(option + cont) << " ------------------>" << std::endl;
 
             Data data;
             data.readDataARFF(p);
             ToolsHelper::normalizeData(data);
-            ToolsHelper::execute(data, MLTools::KNN);
+            MLTools::kCrossValidation(data, MLTools::KNN);
 
             if (run_test)
             {

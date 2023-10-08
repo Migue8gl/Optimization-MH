@@ -93,8 +93,6 @@ public:
      */
     static double computeAccuracy(const Data &sample, const std::vector<double> &weights);
 
-    static void execute(const Data &data, MLTools::Optimizer, const int numberPartitions = 5, const std::string &opt = "");
-
     /**
      * @brief Get the dataset title based on the option.
      *
