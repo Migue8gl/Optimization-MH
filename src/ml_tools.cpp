@@ -57,3 +57,9 @@ char MLTools::KNNClassifier(const Data &data, const std::vector<double> &element
         return predictedClass;
     }
 }
+
+std::vector<double> MLTools::KNN(const Data &data, const std::string &opt)
+{
+    // Weigth vector to one, knn does not modify weights
+    return std::vector<double>(data.size(), 1.0);
+}

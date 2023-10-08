@@ -154,12 +154,17 @@ double ToolsHelper::computeAccuracy(const Data &sample, const std::vector<double
     return correctlyClassifiedInstances / static_cast<double>(totalInstances);
 }
 
-void ToolsHelper::execute(const std::vector<Data> &partitions, const std::string &option)
+void ToolsHelper::execute(const Data &data, MLTools::Optimizer, const int numberPartitions, const std::string &option)
 {
     const double alpha = 0.5;
     double TS_average = 0, TR_average = 0, A_average = 0;
 
     auto overallStartTime = std::chrono::high_resolution_clock::now();
+
+    std::cout << "\n***** (CROSS VALIDATION K = " << numberPartitions << ") *****\n"
+              << std::endl;
+
+    std::vector<Data> partitions = data.createPartitions(numberPartitions);
 
     for (int partitionIndex = 0; partitionIndex < partitions.size(); partitionIndex++)
     {
@@ -198,7 +203,7 @@ void ToolsHelper::execute(const std::vector<Data> &partitions, const std::string
         std::cout << "[PART " << partitionIndex + 1 << "] | Reduction Rate: " << reductionRate << std::endl;
         std::cout << "[PART " << partitionIndex + 1 << "] | Fitness: " << fitness << std::endl;
         std::cout << "[PART " << partitionIndex + 1 << "] | Execution Time: " << std::fixed << std::setprecision(2) << executionTime.count() << " ms\n\n";
-        std::cout << "-------------------------------------------\n"
+        std::cout << "--------------------------------------\n"
                   << std::endl;
     }
 
@@ -210,5 +215,20 @@ void ToolsHelper::execute(const std::vector<Data> &partitions, const std::string
     std::cout << "Average Classification Rate: " << TS_average / partitions.size() << std::endl;
     std::cout << "Average Reduction Rate: " << TR_average / partitions.size() << std::endl;
     std::cout << "Average Fitness: " << A_average / partitions.size() << std::endl;
-    std::cout << "Total Execution Time: " << std::fixed << std::setprecision(2) << totalTime.count() << " ms";
+    std::cout << "Total Execution Time: " << std::fixed << std::setprecision(2) << totalTime.count() << " ms\n\n";
+}
+
+std::string ToolsHelper::getDatasetTitle(const int &option)
+{
+    switch (option)
+    {
+    case 1:
+        return "SPECTF-Heart";
+    case 2:
+        return "Parkinsons";
+    case 3:
+        return "Ionosphere";
+    default:
+        return "Unknown Dataset";
+    }
 }

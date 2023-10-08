@@ -10,8 +10,9 @@
 class MLTools
 {
 public:
-    // Define a function type for the algorithm
-    using AlgorithmFunction = char (*)(const Data &, const std::vector<double> &, const std::vector<double> &, int);
+    // Define a optimization function type for the ml algorithm
+    using Optimizer = std::vector<double> (*)(const Data &, const std::string &);
+
     /**
      * @brief Perform k-Nearest Neighbors (k-NN) classification to predict the class of an element.
      *
@@ -22,11 +23,21 @@ public:
      * @param element The data point for which the class is to be predicted.
      * @param weights The weights to apply to each dimension when calculating distances.
      * @param k The number of nearest neighbors to consider for classification (default is 1).
-     * @return The predicted class for the given element.
+     * @return char The predicted class for the given element.
      *
      * @throws std::invalid_argument if an invalid value of k is provided.
      */
     static char KNNClassifier(const Data &data, const std::vector<double> &element, const std::vector<double> &weigths, int k = 1);
+
+    /**
+     * @brief Function that returns weights to perfom k-Nearest Neighbors classification
+     *
+     * kNN classifier does not use weights to make his predictions. Due to that, weights returned are all 1's.
+     *
+     * @param data An instance of the Data class containing information about data labels and data points.
+     * @return std::vector<double> The weights for each of the data points
+     */
+    static std::vector<double> KNN(const Data &data, const std::string &opt = "");
 };
 
 #endif // ML_TOOLS_H

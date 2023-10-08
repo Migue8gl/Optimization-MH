@@ -69,58 +69,89 @@ void runTests(const Data &data, int dataset)
 
 int main(int argc, char *argv[])
 {
-    if (argc > 4 || argc < 2)
+    if (argc > 7)
     {
         std::cerr << "[ERROR] Incorrect number of arguments." << std::endl;
-        std::cerr << "Usage: ./main {seed} [1-3] {run_tests}" << std::endl;
+        std::cerr << "Usage: ./main -s {seed} -d {dataset}[1-3] -t {run_tests}" << std::endl;
         std::cerr << "Where [1-3] corresponds to: 1=spectf-heart, 2=parkinsons, 3=ionosphere" << std::endl;
         return 1;
     }
 
     // Parse command-line arguments
-    Seed::getInstance().setSeed(std::stod(argv[1]));
-    int option = std::stoi(argv[2]);
-    std::string path;
+    std::string sarg;
+    int option = -1;
     bool run_test = false;
-
-    if (argc >= 4)
+    for (int i = 1; i < argc;)
     {
-        std::string testOption = argv[3];
-        if (ToolsHelper::toUpperCase(testOption) == "TRUE" || testOption == "1")
+        sarg = argv[i++];
+
+        if (sarg == "-s")
         {
-            run_test = true;
+            Seed::getInstance().setSeed(std::stod(argv[i++]));
+        }
+
+        else if (sarg == "-d")
+        {
+            option = std::stoi(argv[i++]);
+        }
+
+        else if (sarg == "-t")
+        {
+            std::string testOption = argv[i++];
+            if (ToolsHelper::toUpperCase(testOption) == "TRUE" || testOption == "1")
+            {
+                run_test = true;
+            }
+        }
+        else
+        {
+            std::cerr << "[ERROR] Unrecognized parameters." << std::endl;
+            std::cerr << "Usage: ./main -s {seed} -d {dataset}[1-3] -t {run_tests}" << std::endl;
+            std::cerr << "Where [1-3] corresponds to: 1=spectf-heart, 2=parkinsons, 3=ionosphere" << std::endl;
+            return 1;
         }
     }
 
+    std::vector<std::string> path;
+    int cont = 0;
     switch (option)
     {
     case 1:
-        path = "./data/spectf-heart.arff";
+        path.push_back("./data/spectf-heart.arff");
         break;
     case 2:
-        path = "./data/parkinsons.arff";
+        path.push_back("./data/parkinsons.arff");
         break;
     case 3:
-        path = "./data/ionosphere.arff";
+        path.push_back("./data/ionosphere.arff");
         break;
     default:
-        std::cerr << "[ERROR] Unrecognized parameter." << std::endl;
-        std::cerr << "You must specify the dataset: 1=spectf-heart, 2=parkinsons, 3=ionosphere." << std::endl;
-        std::cerr << "Usage: ./main {seed} [1-3] {run_tests}" << std::endl;
-        return 1;
+        path.push_back("./data/spectf-heart.arff");
+        path.push_back("./data/parkinsons.arff");
+        path.push_back("./data/ionosphere.arff");
+        option = 0;
+        cont = 1;
+        break;
     }
 
     try
     {
-        Data data;
-        data.readDataARFF(path);
-        ToolsHelper::normalizeData(data);
-        std::vector<Data> partitions = data.createPartitions(5);
-        ToolsHelper::execute(partitions, "1");
-
-        if (run_test)
+        for (const std::string &p : path)
         {
-            runTests(data, option);
+            std::cout << "<------------ " << ToolsHelper::getDatasetTitle(option + cont) << " ------------>" << std::endl;
+
+            Data data;
+            data.readDataARFF(p);
+            ToolsHelper::normalizeData(data);
+            ToolsHelper::execute(data, MLTools::KNN);
+
+            if (run_test)
+            {
+                runTests(data, option);
+            }
+
+            if (cont != 0)
+                cont++;
         }
     }
     catch (const std::exception &e)

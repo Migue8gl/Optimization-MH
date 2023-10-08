@@ -8,6 +8,7 @@
 #include <limits>
 #include <random>
 #include "data.h"
+#include "ml_tools.h"
 
 /**
  * @brief Utility class for handling data, reading, and display operations.
@@ -92,7 +93,24 @@ public:
      */
     static double computeAccuracy(const Data &sample, const std::vector<double> &weights);
 
-    static void execute(const std::vector<Data> &partitions, const std::string &option);
+    static void execute(const Data &data, MLTools::Optimizer, const int numberPartitions = 5, const std::string &opt = "");
+
+    /**
+     * @brief Get the dataset title based on the option.
+     *
+     * This function takes an integer option and returns the corresponding dataset title.
+     *
+     * @param option The integer option to determine the dataset title.
+     * @return The dataset title as a string.
+     *
+     * @details
+     * Valid options:
+     * - 1: "SPECTF-Heart"
+     * - 2: "Parkinsons"
+     * - 3: "Ionosphere"
+     * - Other values: "Unknown Dataset"
+     */
+    static std::string getDatasetTitle(const int &option);
 
 private:
     // Static random number generator and distribution
