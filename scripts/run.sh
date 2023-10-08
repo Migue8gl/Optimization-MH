@@ -23,7 +23,7 @@ Test=false
 ResultsDir="./files/results"
 
 # Process command line arguments
-while getopts "ps:d:t:h" opt; do
+while getopts "ps:d:th" opt; do
     case $opt in
         p)
             Parallel=true
@@ -41,7 +41,7 @@ while getopts "ps:d:t:h" opt; do
             show_help
             ;;
         \?)
-            echo "Invalid option: -$OPTARG" >&2
+            echo "Invalid option"
             show_help
             ;;
     esac
@@ -76,6 +76,7 @@ run_single_dataset() {
             cmd="$cmd -t"
         fi
 
+	echo "Executing $cmd"
         # Execute the command
         $cmd > "$ResultsDir/${dataset_name}_results.txt"
     else
