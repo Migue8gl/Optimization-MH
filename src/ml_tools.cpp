@@ -61,13 +61,14 @@ char MLTools::KNNClassifier(const Data &data, const std::vector<double> &element
     }
 }
 
-std::vector<double> MLTools::KNN(const Data &data, const std::string &opt)
+std::vector<double> MLTools::KNN(const Data &data, ...)
 {
     // Weigth vector to one, knn does not modify weights
     return std::vector<double>(data.getData()[0].size(), 1.0);
 }
 
-void MLTools::kCrossValidation(const Data &data, const MLTools::Optimizer &optimizer, const int numberPartitions, const std::string &option)
+template <class... Args>
+static void kCrossValidation(const Data &data, MLTools::Optimizer<Args &&...> optimizer, int numberPartitions, Args &&...a)
 {
     const double alpha = 0.5;
     double TS_average = 0, TR_average = 0, A_average = 0;
@@ -99,7 +100,8 @@ void MLTools::kCrossValidation(const Data &data, const MLTools::Optimizer &optim
             }
         }
 
-        std::vector<double> weights = optimizer(trainingData, option);
+        // Pass the va_list to the optimizer function
+        std::vector<double> weights = optimizer(trainingData, std::forward<Args>(a)...);
 
         for (double &wi : weights)
         {
@@ -140,14 +142,20 @@ void MLTools::kCrossValidation(const Data &data, const MLTools::Optimizer &optim
     std::cout << "Total Execution Time: " << std::fixed << std::setprecision(2) << totalTime.count() << " ms\n\n";
 }
 
-std::vector<double> MLTools::localSearch(const Data &data, const std::string &opt)
+template <class... Args>
+std::vector<double> MLTools::localSearch(const Data &data, Args &&...a)
 {
     const double variance = 0.3;
-    const double alpha = 0.5;
     const double mean = 0.0;
     int reductionCount = 0;
-    int maxIter = 15000;
-    int maxNeighbour = 0;
+
+    // Use a parameter pack expansion to unpack the variadic arguments
+    std::tuple<int, int, double> unpackedArgs(std::forward<Args>(a)...);
+    int maxIter = std::get<0>(unpackedArgs);
+    int maxNeighbour = std::get<1>(unpackedArgs);
+    double alpha = std::get<2>(unpackedArgs);
+
+    std::cout << maxIter << " " << maxNeighbour << " " << alpha << std::endl;
 
     if (maxNeighbour == 0)
     {

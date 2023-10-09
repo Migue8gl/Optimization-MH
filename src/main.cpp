@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
             std::cout << "------------------------------------------" << std::endl;
 
             // Call the first function
-            MLTools::kCrossValidation(data, MLTools::KNN);
+            //MLTools::kCrossValidation(data, &MLTools::KNN, 5);
 
             // Separator for the second function call
             std::cout << "--------------------------------------------------" << std::endl;
@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
             std::cout << "--------------------------------------------------" << std::endl;
 
             // Call the second function
-            MLTools::kCrossValidation(data, MLTools::localSearch);
+            MLTools::kCrossValidation(data, MLTools::localSearch, 5, 15000, 0, 0.5);
 
             if (run_test)
             {

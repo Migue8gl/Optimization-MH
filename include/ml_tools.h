@@ -11,7 +11,8 @@ class MLTools
 {
 public:
     // Define a optimization function type for the ml algorithm
-    using Optimizer = std::vector<double> (*)(const Data &, const std::string &);
+    template <class... Args>
+    using Optimizer = std::vector<double> (*)(const Data &, Args&&...);
 
     /**
      * @brief Perform k-Nearest Neighbors (k-NN) classification to predict the class of an element.
@@ -37,7 +38,7 @@ public:
      * @param data An instance of the Data class containing information about data labels and data points.
      * @return std::vector<double> The weights for each of the data points
      */
-    static std::vector<double> KNN(const Data &data, const std::string &opt = "");
+    static std::vector<double> KNN(const Data &data, ...);
 
     /**
      * @brief Perform k-fold cross-validation.
@@ -58,8 +59,11 @@ public:
      * machine learning model. It helps in estimating how well the model will perform on
      * unseen data by evaluating its performance on multiple subsets of the dataset.
      *
+     * @tparam Data The data type representing the dataset.
+     * @tparam T Additional template parameters for the optimizer.
      */
-    static void kCrossValidation(const Data &data, const MLTools::Optimizer &optimizer, const int numberPartitions = 5, const std::string &opt = "");
+    template <class... Args>
+    static void kCrossValidation(const Data &data, Optimizer<Args&&...> optimizer, int numberPartitions, Args&&...a);
 
     /**
      * @brief Perform local search optimization on a given dataset.
@@ -72,20 +76,13 @@ public:
      * @param maxIter The maximum number of iterations for the optimization (default: 15000).
      * @param maxNeighbour The maximum number of neighbors to explore during each iteration
      *                     (default: 0, which is determined as twice the size of the input data).
+     * @param alpha The alpha parameter controlling the optimization process (default: 0.5).
      * @return A vector of double values representing the optimized weights for the dataset.
      *
+     * @tparam Data The data type representing the dataset.
      */
-    static std::vector<double> localSearch(const Data &data, const std::string &opt = "");
-
-private:
-    /**
-     * @brief Calculate the Euclidean distance between two data points.
-     *
-     * @param point1 First data point.
-     * @param point2 Second data point.
-     * @return The Euclidean distance between the two data points.
-     */
-    static double computeEuclideanDistance(const std::vector<double> &point1, const std::vector<double> &point2, const std::vector<double> &weights);
+    template <class... Args>
+    static std::vector<double> localSearch(const Data &data, Args&&...a);
 
     /**
      * @brief Compute the accuracy of a classifier on a given sample.
@@ -99,6 +96,18 @@ private:
      * @return The accuracy as a double value, ranging from 0.0 (0% accuracy) to 1.0 (100% accuracy).
      */
     static double computeAccuracy(const Data &sample, const std::vector<double> &weights);
+
+private:
+    /**
+     * @brief Calculate the Euclidean distance between two data points.
+     *
+     * @param point1 First data point.
+     * @param point2 Second data point.
+     * @return The Euclidean distance between the two data points.
+     */
+    static double computeEuclideanDistance(const std::vector<double> &point1, const std::vector<double> &point2, const std::vector<double> &weights);
+
+   
 
     /**
      * @brief Compute the fitness value based on the given data and weights.
