@@ -8,6 +8,7 @@
 #include "tools_helper.h"
 #include <chrono>
 #include <iomanip>
+#include "seed.h"
 
 char MLTools::KNNClassifier(const Data &data, const std::vector<double> &element, const std::vector<double> &weigths, int k)
 {
@@ -151,23 +152,28 @@ std::vector<double> MLTools::localSearch(const Data &data, const std::string &op
         maxNeighbour = data.getData()[0].size() * 2;
     }
 
-    std::default_random_engine eng(std::time(nullptr));
-    std::normal_distribution<double> normalDist(0.0, std::sqrt(variance));
+    std::default_random_engine randomEngine(Seed::getInstance().getSeed());
+    std::normal_distribution<double> normalDistribution(0.0, std::sqrt(variance));
 
-    int cont = 0, neighbours = 0;
-    double maxFunc = -std::numeric_limits<double>::infinity();
+    int cont = 0, neighbourCount = 0;
+    double maxFunctionValue = -std::numeric_limits<double>::infinity();
     std::vector<double> w(data.getData()[0].size());
+
+    // Initialize w with random normal values in one line
+    std::generate(w.begin(), w.end(), [&]()
+                  { return normalDistribution(randomEngine); });
+
     double wAux;
 
     double objetiveFunction = MLTools::computeFitness(data, w);
 
-    while (neighbours < maxNeighbour && cont < maxIter)
+    while (neighbourCount < maxNeighbour && cont < maxIter)
     {
         std::vector<double> z(w.size());
 
         for (double &zi : z)
         {
-            zi = normalDist(eng);
+            zi = normalDistribution(randomEngine);
         }
 
         std::vector<double> originalW = w;
@@ -191,15 +197,15 @@ std::vector<double> MLTools::localSearch(const Data &data, const std::string &op
             }
 
             objetiveFunction = MLTools::computeFitness(data, w);
-            if (objetiveFunction > maxFunc)
+            if (objetiveFunction > maxFunctionValue)
             {
-                maxFunc = objetiveFunction;
-                neighbours = 0;
+                maxFunctionValue = objetiveFunction;
+                neighbourCount = 0;
             }
             else
             {
                 w[i] = wAux;
-                neighbours++;
+                neighbourCount++;
             }
         }
 
