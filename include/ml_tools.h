@@ -59,7 +59,25 @@ public:
      * unseen data by evaluating its performance on multiple subsets of the dataset.
      *
      */
-    static void kCrossValidation(const Data &data, MLTools::Optimizer, const int numberPartitions = 5, const std::string &opt = "");
+    static void kCrossValidation(const Data &data, const MLTools::Optimizer &optimizer, const int numberPartitions = 5, const std::string &opt = "");
+
+    /**
+     * @brief Perform local search optimization on a given dataset.
+     *
+     * This function applies a local search optimization algorithm to find an optimal
+     * set of weights for a given dataset. It starts with an initial set of weights and
+     * iteratively explores neighboring solutions to maximize a specified objective function.
+     *
+     * @param data The dataset represented as an instance of the Data class.
+     * @param maxIter The maximum number of iterations for the optimization (default: 15000).
+     * @param maxNeighbour The maximum number of neighbors to explore during each iteration
+     *                     (default: 0, which is determined as twice the size of the input data).
+     * @return A vector of double values representing the optimized weights for the dataset.
+     *
+     */
+    static std::vector<double> localSearch(const Data &data, const std::string &opt = "");
+
+    static double computeFitness(const Data &data, std::vector<double> &weights);
 };
 
 #endif // ML_TOOLS_H

@@ -63,10 +63,10 @@ char MLTools::KNNClassifier(const Data &data, const std::vector<double> &element
 std::vector<double> MLTools::KNN(const Data &data, const std::string &opt)
 {
     // Weigth vector to one, knn does not modify weights
-    return std::vector<double>(data.size(), 1.0);
+    return std::vector<double>(data.getData()[0].size(), 1.0);
 }
 
-void MLTools::kCrossValidation(const Data &data, MLTools::Optimizer, const int numberPartitions, const std::string &option)
+void MLTools::kCrossValidation(const Data &data, const MLTools::Optimizer &optimizer, const int numberPartitions, const std::string &option)
 {
     const double alpha = 0.5;
     double TS_average = 0, TR_average = 0, A_average = 0;
@@ -98,7 +98,16 @@ void MLTools::kCrossValidation(const Data &data, MLTools::Optimizer, const int n
             }
         }
 
-        std::vector<double> weights(trainingData.getData()[0].size(), 1.0);
+        std::vector<double> weights = optimizer(trainingData, option);
+
+        for (double &wi : weights)
+        {
+            if (wi < 0.1)
+            {
+                reductionCount++;
+                wi = 0.0;
+            }
+        }
 
         double classificationAccuracy = ToolsHelper::computeAccuracy(testData, weights);
         double reductionRate = static_cast<double>(reductionCount) / static_cast<double>(weights.size());
@@ -128,4 +137,98 @@ void MLTools::kCrossValidation(const Data &data, MLTools::Optimizer, const int n
     std::cout << "Average Reduction Rate: " << TR_average / partitions.size() << std::endl;
     std::cout << "Average Fitness: " << A_average / partitions.size() << std::endl;
     std::cout << "Total Execution Time: " << std::fixed << std::setprecision(2) << totalTime.count() << " ms\n\n";
+}
+
+std::vector<double> MLTools::localSearch(const Data &data, const std::string &opt)
+{
+    const double variance = 0.3;
+    const double alpha = 0.5;
+    int maxIter = 15000;
+    int maxNeighbour = 0;
+
+    if (maxNeighbour == 0)
+    {
+        maxNeighbour = data.getData()[0].size() * 2;
+    }
+
+    std::default_random_engine eng(std::time(nullptr));
+    std::normal_distribution<double> normalDist(0.0, std::sqrt(variance));
+
+    int cont = 0, neighbours = 0;
+    double maxFunc = -std::numeric_limits<double>::infinity();
+    std::vector<double> w(data.getData()[0].size());
+    double wAux;
+
+    double objetiveFunction = MLTools::computeFitness(data, w);
+
+    while (neighbours < maxNeighbour && cont < maxIter)
+    {
+        std::vector<double> z(w.size());
+
+        for (double &zi : z)
+        {
+            zi = normalDist(eng);
+        }
+
+        std::vector<double> originalW = w;
+        int reductionCount = 0;
+
+        for (size_t i = 0; i < w.size(); ++i)
+        {
+            // Store the original value of w[i]
+            wAux = w[i];
+
+            // Mutation
+            w[i] += z[i];
+
+            // Ensure w[i] is within the bounds [0, 1]
+            w[i] = std::max(0.0, std::min(1.0, w[i]));
+
+            if (w[i] < 0.1)
+            {
+                w[i] = 0;
+                reductionCount += 1;
+            }
+
+            objetiveFunction = MLTools::computeFitness(data, w);
+            if (objetiveFunction > maxFunc)
+            {
+                maxFunc = objetiveFunction;
+                neighbours = 0;
+            }
+            else
+            {
+                w[i] = wAux;
+                neighbours++;
+            }
+        }
+
+        cont++;
+    }
+
+    return w;
+}
+
+double MLTools::computeFitness(const Data &data, std::vector<double> &weights)
+{
+    double classificationRate = 0.0;
+    double reductionRate = 0.0;
+    double reductionCount = 0.0;
+    double fitness;
+
+    for (size_t i = 0; i < weights.size(); ++i)
+    {
+        if (weights[i] < 0.1)
+        {
+            reductionCount += 1.0;
+            // Modify the weights directly in the input vector
+            weights[i] = 0.0;
+        }
+    }
+
+    classificationRate = ToolsHelper::computeAccuracy(data, weights);
+    reductionRate = reductionCount / static_cast<double>(weights.size());
+    fitness = reductionRate * 0.5 + classificationRate * 0.5;
+
+    return fitness;
 }
