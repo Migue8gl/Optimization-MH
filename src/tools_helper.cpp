@@ -2,11 +2,6 @@
 #include "ml_tools.h"
 #include <cctype>
 
-// Define and initialize the static members
-std::mt19937 ToolsHelper::randomGenerator;
-std::uniform_int_distribution<int> ToolsHelper::randomIntDistribution;
-std::uniform_real_distribution<double> ToolsHelper::randomRealDistribution;
-
 std::string ToolsHelper::toUpperCase(const std::string &str)
 {
     std::string result = str;
@@ -102,20 +97,28 @@ void ToolsHelper::normalizeData(Data &data)
     data.setData(data_matrix);
 }
 
-int ToolsHelper::generateRandomNumberInteger(int min, int max, std::random_device::result_type seed)
+int ToolsHelper::generateUniformRandomNumberInteger(int min, int max, std::random_device::result_type seed)
 {
-    // Seed the random number generator with the provided seed
-    randomGenerator.seed(seed);
+    std::default_random_engine generator(seed);
+    std::uniform_int_distribution<int> distribution(min, max);
 
-    return randomIntDistribution(randomGenerator, std::uniform_int_distribution<int>::param_type(min, max));
+    return distribution(generator);
 }
 
-double ToolsHelper::generateRandomNumberDouble(double min, double max, std::random_device::result_type seed)
+double ToolsHelper::generateUniformRandomNumberDouble(double min, double max, std::random_device::result_type seed)
 {
-    // Seed the random number generator with the provided seed
-    randomGenerator.seed(seed);
+    std::default_random_engine generator(seed);
+    std::uniform_real_distribution<double> distribution(min, max);
 
-    return randomRealDistribution(randomGenerator, std::uniform_real_distribution<double>::param_type(min, max));
+    return distribution(generator);
+}
+
+double ToolsHelper::generateNormalRandomNumber(double mean, double stddev, std::random_device::result_type seed)
+{
+    std::default_random_engine generator(seed);
+    std::normal_distribution<double> distribution(mean, stddev);
+
+    return distribution(generator);
 }
 
 double ToolsHelper::computeEuclideanDistance(const std::vector<double> &point1, const std::vector<double> &point2, const std::vector<double> &weights)
@@ -139,9 +142,9 @@ double ToolsHelper::computeAccuracy(const Data &sample, const std::vector<double
     double correctlyClassifiedInstances = 0.0;
     const std::vector<std::vector<double>> &samples = sample.getData();
     const std::vector<char> &classes = sample.getLabels();
-    size_t totalInstances = sample.size();
+    unsigned int totalInstances = sample.size();
 
-    for (size_t i = 0; i < totalInstances; ++i)
+    for (unsigned int i = 0; i < totalInstances; ++i)
     {
         char predictedClass = MLTools::KNNClassifier(sample, samples[i], weights);
 

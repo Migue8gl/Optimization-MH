@@ -10,10 +10,10 @@
 #include <iomanip>
 #include "seed.h"
 
-char MLTools::KNNClassifier(const Data &data, const std::vector<double> &element, const std::vector<double> &weigths, int k)
+char MLTools::KNNClassifier(const Data &data, const std::vector<double> &element, const std::vector<double> &weigths, const unsigned int &k)
 {
     {
-        size_t dataSize = data.size();
+        unsigned int dataSize = data.size();
         std::vector<std::vector<double>> dataMatrix = data.getData();
         std::vector<char> dataLabels = data.getLabels();
 
@@ -39,7 +39,7 @@ char MLTools::KNNClassifier(const Data &data, const std::vector<double> &element
 
         // Count the occurrences of each class among the k nearest neighbors
         std::unordered_map<char, int> classCounts;
-        for (int i = 0; i < k; ++i)
+        for (unsigned int i = 0; i < k; ++i)
         {
             char cls = distancesAndClasses[i].second;
             classCounts[cls]++;
@@ -79,14 +79,14 @@ void MLTools::kCrossValidation(const Data &data, const MLTools::Optimizer &optim
 
     std::vector<Data> partitions = data.createPartitions(numberPartitions);
 
-    for (int partitionIndex = 0; partitionIndex < partitions.size(); partitionIndex++)
+    for (unsigned int partitionIndex = 0; partitionIndex < partitions.size(); partitionIndex++)
     {
         auto startTime = std::chrono::high_resolution_clock::now();
         const Data &trainingData = partitions[partitionIndex];
         Data testData;
         unsigned int reductionCount = 0;
 
-        for (int i = 0; i < partitions.size(); i++)
+        for (unsigned int i = 0; i < partitions.size(); i++)
         {
             if (i != partitionIndex)
             {
@@ -144,6 +144,8 @@ std::vector<double> MLTools::localSearch(const Data &data, const std::string &op
 {
     const double variance = 0.3;
     const double alpha = 0.5;
+    const double mean = 0.0;
+    int reductionCount = 0;
     int maxIter = 15000;
     int maxNeighbour = 0;
 
@@ -152,32 +154,26 @@ std::vector<double> MLTools::localSearch(const Data &data, const std::string &op
         maxNeighbour = data.getData()[0].size() * 2;
     }
 
-    std::default_random_engine randomEngine(Seed::getInstance().getSeed());
-    std::normal_distribution<double> normalDistribution(0.0, std::sqrt(variance));
-
-    int cont = 0, neighbourCount = 0;
+    int counter = 0, neighbourCount = 0;
     double maxFunctionValue = -std::numeric_limits<double>::infinity();
     std::vector<double> w(data.getData()[0].size());
+    std::default_random_engine eng(Seed::getInstance().getSeed());
+    std::normal_distribution<double> normalDist(mean, std::sqrt(variance));
 
     // Initialize w with random normal values in one line
     std::generate(w.begin(), w.end(), [&]()
-                  { return normalDistribution(randomEngine); });
+                  { return normalDist(eng); });
 
     double wAux;
+    double objetiveFunction = MLTools::computeFitness(data, w, alpha);
 
-    double objetiveFunction = MLTools::computeFitness(data, w);
-
-    while (neighbourCount < maxNeighbour && cont < maxIter)
+    while (neighbourCount < maxNeighbour && counter < maxIter)
     {
         std::vector<double> z(w.size());
-
-        for (double &zi : z)
-        {
-            zi = normalDistribution(randomEngine);
-        }
+        std::generate(z.begin(), z.end(), [&]()
+                      { return normalDist(eng); });
 
         std::vector<double> originalW = w;
-        int reductionCount = 0;
 
         for (size_t i = 0; i < w.size(); ++i)
         {
@@ -196,7 +192,7 @@ std::vector<double> MLTools::localSearch(const Data &data, const std::string &op
                 reductionCount += 1;
             }
 
-            objetiveFunction = MLTools::computeFitness(data, w);
+            objetiveFunction = MLTools::computeFitness(data, w, alpha);
             if (objetiveFunction > maxFunctionValue)
             {
                 maxFunctionValue = objetiveFunction;
@@ -209,13 +205,13 @@ std::vector<double> MLTools::localSearch(const Data &data, const std::string &op
             }
         }
 
-        cont++;
+        counter++;
     }
 
     return w;
 }
 
-double MLTools::computeFitness(const Data &data, std::vector<double> &weights)
+double MLTools::computeFitness(const Data &data, std::vector<double> &weights, const double &alpha)
 {
     double classificationRate = 0.0;
     double reductionRate = 0.0;
@@ -234,7 +230,7 @@ double MLTools::computeFitness(const Data &data, std::vector<double> &weights)
 
     classificationRate = ToolsHelper::computeAccuracy(data, weights);
     reductionRate = reductionCount / static_cast<double>(weights.size());
-    fitness = reductionRate * 0.5 + classificationRate * 0.5;
+    fitness = reductionRate * alpha + classificationRate * (1 - alpha);
 
     return fitness;
 }

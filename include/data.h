@@ -81,7 +81,7 @@ public:
      * @brief Get the number of data points stored in this object.
      * @return The number of data points.
      */
-    std::size_t size() const;
+    unsigned int size() const;
 
     /**
      * @brief Read data from an ARFF file and extract its data and classes.

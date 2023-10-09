@@ -18,10 +18,10 @@ TARFILE = ga.tar.gz
 all: directories $(EXEC)
 
 $(EXEC): $(OBJS)
-	$(CXX) $(CXXFLAGS) $(OBJS) -o $(EXEC)
+	$(CXX) -Wall -Wextra $(CXXFLAGS) $(OBJS) -o $(EXEC)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	$(CXX) -Wall -Wextra $(CXXFLAGS) -c $< -o $@
 
 directories:
 	mkdir -p $(OBJDIR) $(BINDIR)

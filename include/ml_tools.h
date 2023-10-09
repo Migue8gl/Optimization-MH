@@ -27,10 +27,10 @@ public:
      *
      * @throws std::invalid_argument if an invalid value of k is provided.
      */
-    static char KNNClassifier(const Data &data, const std::vector<double> &element, const std::vector<double> &weigths, int k = 1);
+    static char KNNClassifier(const Data &data, const std::vector<double> &element, const std::vector<double> &weigths, const unsigned int &k = 1);
 
     /**
-     * @brief Function that returns weights to perfom k-Nearest Neighbors classification
+     * @brief Function that returns weights to perfom k-Nearest Neighbors classification 
      *
      * kNN classifier does not use weights to make his predictions. Due to that, weights returned are all 1's.
      *
@@ -77,7 +77,16 @@ public:
      */
     static std::vector<double> localSearch(const Data &data, const std::string &opt = "");
 
-    static double computeFitness(const Data &data, std::vector<double> &weights);
+    /**
+     * @brief Compute the fitness value based on the given data and weights.
+     *
+     * This function calculates the fitness value based on the provided data and weights.
+     *
+     * @param data The data object containing the dataset and labels.
+     * @param weights The vector of weights to be used for fitness computation.
+     * @return The computed fitness value.
+     */
+    static double computeFitness(const Data &data, std::vector<double> &weights, const double &alpha = 0.5);
 };
 
 #endif // ML_TOOLS_H

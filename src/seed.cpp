@@ -10,7 +10,7 @@ Seed &Seed::getInstance()
         // Use integer limits for generating a random integer seed
         int minSeed = 0;
         int maxSeed = std::numeric_limits<int>::max();
-        instance = new Seed(ToolsHelper::generateRandomNumberInteger(minSeed, maxSeed));
+        instance = new Seed(ToolsHelper::generateUniformRandomNumberInteger(minSeed, maxSeed));
     }
     return *instance;
 }

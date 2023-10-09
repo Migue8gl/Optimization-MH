@@ -141,17 +141,17 @@ int main(int argc, char *argv[])
             data.readDataARFF(p);
             ToolsHelper::normalizeData(data);
             // Separator for the first function call
-            std::cout << "------------------------" << std::endl;
+            std::cout << "------------------------------------------" << std::endl;
             std::cout << "Calling MLTools::kCrossValidation with KNN" << std::endl;
-            std::cout << "------------------------" << std::endl;
+            std::cout << "------------------------------------------" << std::endl;
 
             // Call the first function
             MLTools::kCrossValidation(data, MLTools::KNN);
 
             // Separator for the second function call
-            std::cout << "------------------------" << std::endl;
+            std::cout << "--------------------------------------------------" << std::endl;
             std::cout << "Calling MLTools::kCrossValidation with localSearch" << std::endl;
-            std::cout << "------------------------" << std::endl;
+            std::cout << "--------------------------------------------------" << std::endl;
 
             // Call the second function
             MLTools::kCrossValidation(data, MLTools::localSearch);

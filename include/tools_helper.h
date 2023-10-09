@@ -52,24 +52,34 @@ public:
     static void normalizeData(Data &data);
 
     /**
-     * @brief Generate a random integer number in a given range.
+     * @brief Generate a random uniform integer number in a given range.
      *
      * @param min Lower bound.
      * @param max Upper bound.
      * @param seed Optional seed value to initialize the random number generator.
      * @return A random integer value within the specified range [min, max].
      */
-    static int generateRandomNumberInteger(int min, int max, std::random_device::result_type seed = std::random_device{}());
+    static int generateUniformRandomNumberInteger(int min, int max, std::random_device::result_type seed = std::random_device{}());
 
     /**
-     * @brief Generate a random double number in a given range.
+     * @brief Generate a random uniform double number in a given range.
      *
      * @param min Lower bound.
      * @param max Upper bound.
      * @param seed Optional seed value to initialize the random number generator.
      * @return A random double value within the specified range [min, max].
      */
-    static double generateRandomNumberDouble(double min, double max, std::random_device::result_type seed = std::random_device{}());
+    static double generateUniformRandomNumberDouble(double min, double max, std::random_device::result_type seed = std::random_device{}());
+
+    /**
+     * @brief Generate a random normal number in a given range.
+     *
+     * @param mean The mean of the normal distribution.
+     * @param stddev The standard deviation of the normal distribution.
+     * @param seed Optional seed value to initialize the random number generator.
+     * @return A random double value within the specified range [min, max].
+     */
+    static double generateNormalRandomNumber(double mean, double stddev, std::random_device::result_type seed = std::random_device{}());
 
     /**
      * @brief Calculate the Euclidean distance between two data points.
@@ -109,12 +119,6 @@ public:
      * - Other values: "Unknown Dataset"
      */
     static std::string getDatasetTitle(const int &option);
-
-private:
-    // Static random number generator and distribution
-    static std::mt19937 randomGenerator;
-    static std::uniform_int_distribution<int> randomIntDistribution;
-    static std::uniform_real_distribution<double> randomRealDistribution;
 };
 
 #endif // TOOLS_HELPER_H

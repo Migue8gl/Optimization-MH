@@ -24,7 +24,7 @@ void Tests::testPartitions(const Data &data, int k)
         // Count classes in the current partition
         std::map<char, int> classCounts;
 
-        for (size_t j = 0; j < partitions[i].size(); ++j)
+        for (unsigned int j = 0; j < partitions[i].size(); ++j)
         {
             char currentClass = partitions[i].getLabels()[j];
 
@@ -53,7 +53,7 @@ void Tests::testKNNClassifier(const Data &data, int k)
 
     // Test element (you can customize this)
     int seed = Seed::getInstance().getSeed();
-    int randomIndex = ToolsHelper::generateRandomNumberInteger(0, data.size() - 1, seed);
+    int randomIndex = ToolsHelper::generateUniformRandomNumberInteger(0, data.size() - 1, seed);
     std::vector<double> element = data.getData()[randomIndex];
     std::vector<double> weights(data.getData()[0].size(), 1.0);
 
@@ -65,7 +65,7 @@ void Tests::testKNNClassifier(const Data &data, int k)
 
     // Print information
     std::cout << "\nTest Element: [";
-    for (int i = 0; i < element.size(); i++)
+    for (unsigned int i = 0; i < element.size(); i++)
     {
         std::cout << element[i];
         if (i < element.size() - 1)
@@ -76,7 +76,7 @@ void Tests::testKNNClassifier(const Data &data, int k)
     std::cout << "]" << std::endl;
 
     std::cout << "\nWeights: [";
-    for (int i = 0; i < weights.size(); i++)
+    for (unsigned int i = 0; i < weights.size(); i++)
     {
         std::cout << weights[i];
         if (i < weights.size() - 1)
@@ -111,7 +111,7 @@ void Tests::printDataInfo(const Data &data)
     for (size_t i = 0; i < std::min<size_t>(5, data.size()); ++i)
     {
         std::cout << "Data point " << i + 1 << ": ";
-        for (size_t j = 0; j < dataMatrix[i].size(); ++j)
+        for (unsigned int j = 0; j < dataMatrix[i].size(); ++j)
         {
             if (j > 0)
                 std::cout << ", ";

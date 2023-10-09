@@ -41,7 +41,7 @@ void Data::clearData()
     this->labels.clear();
 }
 
-std::size_t Data::size() const
+unsigned int Data::size() const
 {
     return this->data.size();
 }
@@ -57,7 +57,7 @@ void Data::readDataARFF(const std::string &file)
     }
 
     std::string line;
-    int num_attributes = 0;
+    unsigned int num_attributes = 0;
     bool reading_data = false;
     std::vector<std::vector<double>> data;
     std::vector<char> labels;
