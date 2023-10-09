@@ -8,65 +8,6 @@
 #include "seed.h"
 #include "ml_tools.h"
 
-/**
- * @brief Test function to debug.
- *
- * This function takes data information and dumps all information
- * for debuggin purposes in a txt file.
- *
- * @param data Instace of Data class, contains information about data labels and data points.
- * @param dataset Representative integer of the dataset
- */
-void runTests(const Data &data, int dataset)
-{
-    // Redirect stdout to a text file for testPartitions
-    std::ofstream outFile1("./files/tests/test_partitions_" + std::to_string(dataset) + ".txt");
-    std::streambuf *coutBuffer1 = std::cout.rdbuf(); // Save cout buffer
-    std::cout.rdbuf(outFile1.rdbuf());               // Redirect cout to outFile1
-
-    std::cout << "-------- Test partitions --------\n"
-              << std::endl;
-    Tests::testPartitions(data);
-
-    // Restore cout
-    std::cout.rdbuf(coutBuffer1);
-
-    // Redirect stdout to a text file for testReadAndDisplayData
-    std::ofstream outFile2("./files/tests/test_data_reading_" + std::to_string(dataset) + ".txt");
-    std::streambuf *coutBuffer2 = std::cout.rdbuf(); // Save cout buffer
-    std::cout.rdbuf(outFile2.rdbuf());               // Redirect cout to outFile2
-
-    std::cout << "-------- Test Data Reading --------\n"
-              << std::endl;
-    Tests::testReadAndDisplayData(data);
-
-    // Restore cout
-    std::cout.rdbuf(coutBuffer2);
-
-    // Redirect stdout to a text file for testKNNClassifier
-    std::ofstream outFile3("./files/tests/test_knn_classifier_" + std::to_string(dataset) + ".txt");
-    std::streambuf *coutBuffer3 = std::cout.rdbuf(); // Save cout buffer
-    std::cout.rdbuf(outFile3.rdbuf());               // Redirect cout to outFile3
-
-    std::cout << "-------- Test KNN Classifier --------\n"
-              << std::endl;
-    Tests::testKNNClassifier(data, 10); // You can customize the k value
-
-    // Restore cout
-    std::cout.rdbuf(coutBuffer3);
-
-    // Redirect stdout to a text file for testShuffledData
-    std::ofstream outFile4("./files/tests/test_shuffled_data_" + std::to_string(dataset) + ".txt");
-    std::streambuf *coutBuffer4 = std::cout.rdbuf(); // Save cout buffer
-    std::cout.rdbuf(outFile4.rdbuf());               // Redirect cout to outFile4
-
-    std::cout << "-------- Test Shuffled Data --------\n"
-              << std::endl;
-    Tests::testShuffledData(data, Seed::getInstance().getSeed(), 4); // You can customize the seed and k value
-
-    // Restore cout
-    std::cout.rdbuf(coutBuffer4);
-}
 
 int main(int argc, char *argv[])
 {
@@ -158,7 +99,7 @@ int main(int argc, char *argv[])
 
             if (run_test)
             {
-                runTests(data, option);
+                Tests::runTests(data, option);
             }
 
             if (cont != 0)

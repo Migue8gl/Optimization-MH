@@ -28,7 +28,7 @@ char MLTools::KNNClassifier(const Data &data, const std::vector<double> &element
         {
             if (element != dataMatrix[i])
             { // Skip the same element
-                double distance = ToolsHelper::computeEuclideanDistance(element, dataMatrix[i], weigths);
+                double distance = MLTools::computeEuclideanDistance(element, dataMatrix[i], weigths);
                 distancesAndClasses.emplace_back(distance, dataLabels[i]);
             }
         }
@@ -110,7 +110,7 @@ void MLTools::kCrossValidation(const Data &data, const MLTools::Optimizer &optim
             }
         }
 
-        double classificationAccuracy = ToolsHelper::computeAccuracy(testData, weights);
+        double classificationAccuracy = MLTools::computeAccuracy(testData, weights);
         double reductionRate = static_cast<double>(reductionCount) / static_cast<double>(weights.size());
         double fitness = alpha * classificationAccuracy + (1.0 - alpha) * reductionRate;
 
@@ -228,9 +228,43 @@ double MLTools::computeFitness(const Data &data, std::vector<double> &weights, c
         }
     }
 
-    classificationRate = ToolsHelper::computeAccuracy(data, weights);
+    classificationRate = MLTools::computeAccuracy(data, weights);
     reductionRate = reductionCount / static_cast<double>(weights.size());
     fitness = reductionRate * alpha + classificationRate * (1 - alpha);
 
     return fitness;
+}
+
+double MLTools::computeEuclideanDistance(const std::vector<double> &point1, const std::vector<double> &point2, const std::vector<double> &weights)
+{
+    if (point1.size() != point2.size() || point1.size() != weights.size())
+    {
+        throw std::invalid_argument("Vector dimensions and weights must match.");
+    }
+
+    double sum = 0.0;
+    for (size_t i = 0; i < point1.size(); ++i)
+    {
+        double diff = point1[i] - point2[i];
+        sum += weights[i] * (diff * diff);
+    }
+    return sqrt(sum);
+}
+
+double MLTools::computeAccuracy(const Data &sample, const std::vector<double> &weights)
+{
+    double correctlyClassifiedInstances = 0.0;
+    const std::vector<std::vector<double>> &samples = sample.getData();
+    const std::vector<char> &classes = sample.getLabels();
+    unsigned int totalInstances = sample.size();
+
+    for (unsigned int i = 0; i < totalInstances; ++i)
+    {
+        char predictedClass = MLTools::KNNClassifier(sample, samples[i], weights);
+
+        if (predictedClass == classes[i])
+            correctlyClassifiedInstances += 1.0;
+    }
+
+    return correctlyClassifiedInstances / static_cast<double>(totalInstances);
 }

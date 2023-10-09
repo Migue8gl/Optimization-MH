@@ -61,7 +61,27 @@ public:
      *
      * @param data The Data object to be described.
      */
+
+    /**
+     * @brief Test function to debug.
+     *
+     * This function takes data information and dumps all information
+     * for debuggin purposes in a txt file.
+     *
+     * @param data Instace of Data class, contains information about data labels and data points.
+     * @param dataset Representative integer of the dataset
+     */
+    static void runTests(const Data &data, int dataset);
+
 private:
+    /**
+     * @brief Prints information about the Data.
+     *
+     * This static function prints various information about the provided Data object,
+     * including details about data labels and data points.
+     *
+     * @param data The Data object containing information to be printed.
+     */
     static void printDataInfo(const Data &data);
 };
 

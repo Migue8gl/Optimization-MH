@@ -30,7 +30,7 @@ public:
     static char KNNClassifier(const Data &data, const std::vector<double> &element, const std::vector<double> &weigths, const unsigned int &k = 1);
 
     /**
-     * @brief Function that returns weights to perfom k-Nearest Neighbors classification 
+     * @brief Function that returns weights to perfom k-Nearest Neighbors classification
      *
      * kNN classifier does not use weights to make his predictions. Due to that, weights returned are all 1's.
      *
@@ -76,6 +76,29 @@ public:
      *
      */
     static std::vector<double> localSearch(const Data &data, const std::string &opt = "");
+
+private:
+    /**
+     * @brief Calculate the Euclidean distance between two data points.
+     *
+     * @param point1 First data point.
+     * @param point2 Second data point.
+     * @return The Euclidean distance between the two data points.
+     */
+    static double computeEuclideanDistance(const std::vector<double> &point1, const std::vector<double> &point2, const std::vector<double> &weights);
+
+    /**
+     * @brief Compute the accuracy of a classifier on a given sample.
+     *
+     * This function calculates the accuracy of a classifier on a provided sample
+     * using the specified weights.
+     *
+     * @param sample The sample for which accuracy is computed.
+     * @param weights The weights used by the classifier.
+     *
+     * @return The accuracy as a double value, ranging from 0.0 (0% accuracy) to 1.0 (100% accuracy).
+     */
+    static double computeAccuracy(const Data &sample, const std::vector<double> &weights);
 
     /**
      * @brief Compute the fitness value based on the given data and weights.

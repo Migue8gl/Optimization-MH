@@ -121,40 +121,6 @@ double ToolsHelper::generateNormalRandomNumber(double mean, double stddev, std::
     return distribution(generator);
 }
 
-double ToolsHelper::computeEuclideanDistance(const std::vector<double> &point1, const std::vector<double> &point2, const std::vector<double> &weights)
-{
-    if (point1.size() != point2.size() || point1.size() != weights.size())
-    {
-        throw std::invalid_argument("Vector dimensions and weights must match.");
-    }
-
-    double sum = 0.0;
-    for (size_t i = 0; i < point1.size(); ++i)
-    {
-        double diff = point1[i] - point2[i];
-        sum += weights[i] * (diff * diff);
-    }
-    return sqrt(sum);
-}
-
-double ToolsHelper::computeAccuracy(const Data &sample, const std::vector<double> &weights)
-{
-    double correctlyClassifiedInstances = 0.0;
-    const std::vector<std::vector<double>> &samples = sample.getData();
-    const std::vector<char> &classes = sample.getLabels();
-    unsigned int totalInstances = sample.size();
-
-    for (unsigned int i = 0; i < totalInstances; ++i)
-    {
-        char predictedClass = MLTools::KNNClassifier(sample, samples[i], weights);
-
-        if (predictedClass == classes[i])
-            correctlyClassifiedInstances += 1.0;
-    }
-
-    return correctlyClassifiedInstances / static_cast<double>(totalInstances);
-}
-
 std::string ToolsHelper::getDatasetTitle(const int &option)
 {
     switch (option)

@@ -82,28 +82,6 @@ public:
     static double generateNormalRandomNumber(double mean, double stddev, std::random_device::result_type seed = std::random_device{}());
 
     /**
-     * @brief Calculate the Euclidean distance between two data points.
-     *
-     * @param point1 First data point.
-     * @param point2 Second data point.
-     * @return The Euclidean distance between the two data points.
-     */
-    static double computeEuclideanDistance(const std::vector<double> &point1, const std::vector<double> &point2, const std::vector<double> &weights);
-
-    /**
-     * @brief Compute the accuracy of a classifier on a given sample.
-     *
-     * This function calculates the accuracy of a classifier on a provided sample
-     * using the specified weights.
-     *
-     * @param sample The sample for which accuracy is computed.
-     * @param weights The weights used by the classifier.
-     *
-     * @return The accuracy as a double value, ranging from 0.0 (0% accuracy) to 1.0 (100% accuracy).
-     */
-    static double computeAccuracy(const Data &sample, const std::vector<double> &weights);
-
-    /**
      * @brief Get the dataset title based on the option.
      *
      * This function takes an integer option and returns the corresponding dataset title.
