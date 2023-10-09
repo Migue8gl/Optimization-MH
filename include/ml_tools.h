@@ -69,9 +69,7 @@ public:
      * iteratively explores neighboring solutions to maximize a specified objective function.
      *
      * @param data The dataset represented as an instance of the Data class.
-     * @param maxIter The maximum number of iterations for the optimization (default: 15000).
-     * @param maxNeighbour The maximum number of neighbors to explore during each iteration
-     *                     (default: 0, which is determined as twice the size of the input data).
+     * @param opt An optional string parameter for specifying optimization settings (default: empty string).).
      * @return A vector of double values representing the optimized weights for the dataset.
      *
      */
