@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
         break;
     }
 
-    try
+    try 
     {
         for (const std::string &p : path)
         {
