@@ -92,7 +92,7 @@ void MLTools::kCrossValidation(const Data &data, const MLTools::Optimizer &optim
             {
                 const std::vector<std::vector<double>> &otherData = partitions[i].getData();
                 const std::vector<char> &otherLabels = partitions[i].getLabels();
-                for (size_t j = 0; j < otherData.size(); j++)
+                for (unsigned int j = 0; j < otherData.size(); j++)
                 {
                     testData.addDataPoint(otherData[j], otherLabels[j]);
                 }
@@ -142,10 +142,10 @@ void MLTools::kCrossValidation(const Data &data, const MLTools::Optimizer &optim
 
 std::vector<double> MLTools::localSearch(const Data &data, const std::string &opt)
 {
+    // Variables used
     const double variance = 0.3;
     const double alpha = 0.5;
     const double mean = 0.0;
-    int reductionCount = 0;
     int maxIter = 15000;
     int maxNeighbour = 0;
 
@@ -157,52 +157,41 @@ std::vector<double> MLTools::localSearch(const Data &data, const std::string &op
     int counter = 0, neighbourCount = 0;
     double maxFunctionValue = -std::numeric_limits<double>::infinity();
     std::vector<double> w(data.getData()[0].size());
-    std::default_random_engine eng(Seed::getInstance().getSeed());
-    std::normal_distribution<double> normalDist(mean, std::sqrt(variance));
 
     // Initialize w with random normal values in one line
     std::generate(w.begin(), w.end(), [&]()
-                  { return normalDist(eng); });
+                  { return ToolsHelper::generateNormalRandomNumber(mean, std::sqrt(variance), Seed::getInstance().getSeed()); });
 
     double wAux;
     double objetiveFunction = MLTools::computeFitness(data, w, alpha);
 
     while (neighbourCount < maxNeighbour && counter < maxIter)
     {
-        std::vector<double> z(w.size());
-        std::generate(z.begin(), z.end(), [&]()
-                      { return normalDist(eng); });
+        unsigned int randIndex = ToolsHelper::generateUniformRandomNumberInteger(0, w.size() - 1, Seed::getInstance().getSeed());
 
-        std::vector<double> originalW = w;
+        // Store the original value of w[randIndex]
+        wAux = w[randIndex];
 
-        for (size_t i = 0; i < w.size(); ++i)
+        // Mutation
+        w[randIndex] += ToolsHelper::generateNormalRandomNumber(mean, std::sqrt(variance), Seed::getInstance().getSeed());
+
+        // Ensure w[i] is within the bounds [0, 1]
+        //w[randIndex] = std::max(0.0, std::min(1.0, w[randIndex]));
+        if (w[randIndex] < 0.1 && w[randIndex] > -0.1)
         {
-            // Store the original value of w[i]
-            wAux = w[i];
+            w[randIndex] = 0.0; // Modify the weights directly in the input vector
+        }
 
-            // Mutation
-            w[i] += z[i];
-
-            // Ensure w[i] is within the bounds [0, 1]
-            w[i] = std::max(0.0, std::min(1.0, w[i]));
-
-            if (w[i] < 0.1)
-            {
-                w[i] = 0;
-                reductionCount += 1;
-            }
-
-            objetiveFunction = MLTools::computeFitness(data, w, alpha);
-            if (objetiveFunction > maxFunctionValue)
-            {
-                maxFunctionValue = objetiveFunction;
-                neighbourCount = 0;
-            }
-            else
-            {
-                w[i] = wAux;
-                neighbourCount++;
-            }
+        objetiveFunction = MLTools::computeFitness(data, w, alpha);
+        if (objetiveFunction > maxFunctionValue)
+        {
+            maxFunctionValue = objetiveFunction;
+            neighbourCount = 0;
+        }
+        else
+        {
+            w[randIndex] = wAux;
+            neighbourCount++;
         }
 
         counter++;
@@ -211,14 +200,14 @@ std::vector<double> MLTools::localSearch(const Data &data, const std::string &op
     return w;
 }
 
-double MLTools::computeFitness(const Data &data, std::vector<double> &weights, const double &alpha)
+double MLTools::computeFitness(const Data &data, std::vector<double> weights, const double &alpha)
 {
     double classificationRate = 0.0;
     double reductionRate = 0.0;
     double reductionCount = 0.0;
     double fitness;
 
-    for (size_t i = 0; i < weights.size(); ++i)
+    for (unsigned int i = 0; i < weights.size(); ++i)
     {
         if (weights[i] < 0.1)
         {
@@ -227,7 +216,6 @@ double MLTools::computeFitness(const Data &data, std::vector<double> &weights, c
             weights[i] = 0.0;
         }
     }
-
     classificationRate = MLTools::computeAccuracy(data, weights);
     reductionRate = reductionCount / static_cast<double>(weights.size());
     fitness = reductionRate * alpha + classificationRate * (1 - alpha);
@@ -243,7 +231,7 @@ double MLTools::computeEuclideanDistance(const std::vector<double> &point1, cons
     }
 
     double sum = 0.0;
-    for (size_t i = 0; i < point1.size(); ++i)
+    for (unsigned int i = 0; i < point1.size(); ++i)
     {
         double diff = point1[i] - point2[i];
         sum += weights[i] * (diff * diff);

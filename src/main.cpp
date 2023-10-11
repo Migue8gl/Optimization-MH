@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
 
             Data data;
             data.readDataARFF(p);
-            ToolsHelper::normalizeData(data);
+            ToolsHelper::normalizeDataCeroOne(data);
             // Separator for the first function call
             std::cout << "------------------------------------------" << std::endl;
             std::cout << "Calling MLTools::kCrossValidation with KNN" << std::endl;

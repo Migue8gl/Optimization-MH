@@ -47,7 +47,7 @@ void Tests::testPartitions(const Data &data, int k)
     }
 }
 
-void Tests::testKNNClassifier(const Data &data, int k)
+void Tests::testKNNClassifier(const Data &data, const unsigned int &k)
 {
     std::cout << "Testing KNNClassifier with k = " << k << std::endl;
 

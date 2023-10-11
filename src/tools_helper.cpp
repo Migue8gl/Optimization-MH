@@ -57,7 +57,7 @@ void ToolsHelper::displayDataInfo(const Data &data, const std::string &separator
     }
 }
 
-void ToolsHelper::normalizeData(Data &data)
+void ToolsHelper::normalizeDataCeroOne(Data &data)
 {
     std::vector<std::vector<double>> data_matrix = data.getData();
     if (data_matrix.empty() || data_matrix[0].empty())
@@ -91,6 +91,46 @@ void ToolsHelper::normalizeData(Data &data)
         for (double &item : row)
         {
             item = (item - min_item) / range;
+        }
+    }
+
+    data.setData(data_matrix);
+}
+
+void ToolsHelper::normalizeDataMinusOneOne(Data &data)
+{
+    std::vector<std::vector<double>> data_matrix = data.getData();
+    if (data_matrix.empty() || data_matrix[0].empty())
+    {
+        return; // Handle empty data to avoid division by zero
+    }
+
+    double max_item = -std::numeric_limits<double>::infinity();
+    double min_item = std::numeric_limits<double>::infinity();
+
+    // Find the maximum and minimum values
+    for (const auto &row : data_matrix)
+    {
+        for (const double &item : row)
+        {
+            max_item = std::max(max_item, item);
+            min_item = std::min(min_item, item);
+        }
+    }
+
+    // Avoid division by zero if max_item and min_item are the same
+    if (max_item == min_item)
+    {
+        return;
+    }
+
+    // Normalize using x_iN = (x_i - min) / (max - min)
+    const double range = max_item - min_item;
+    for (auto &row : data_matrix)
+    {
+        for (double &item : row)
+        {
+            item = (2 * (item - min_item) / range) - 1;
         }
     }
 

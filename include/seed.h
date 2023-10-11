@@ -3,63 +3,55 @@
 
 /**
  * @class Seed
- * @brief Singleton class for managing a seed value.
+ * @brief Singleton class for managing seed values.
  */
 class Seed
 {
 public:
     /**
-     * @brief Static member function to get the singleton instance of Seed.
-     * @return Reference to the singleton Seed instance.
+     * @brief Get the instance of the Seed singleton.
+     * @return Reference to the Seed instance.
      */
     static Seed &getInstance();
 
     /**
-     * @brief Set the seed value.
-     * @param value The new seed value to set.
+     * @brief Set a specific seed value.
+     * @param value The seed value to set.
      */
     void setSeed(int value);
 
     /**
      * @brief Get the current seed value.
-     * @return The current seed value.
+     * @return The current seed value, either explicitly set or randomly generated.
      */
     int getSeed() const;
 
     /**
-     * @brief Delete the copy constructor to prevent copying the instance.
+     * @brief Destructor for Seed.
      */
-    Seed(const Seed &) = delete;
-
-    /**
-     * @brief Delete the assignment operator to prevent copying the instance.
-     * @return Reference to this Seed instance.
-     */
-    Seed &operator=(const Seed &) = delete;
+    ~Seed();
 
 private:
     /**
-     * @brief Private constructor to prevent direct instantiation of Seed.
+     * @brief Private constructor for Seed.
      */
     Seed();
 
     /**
-     * @brief Private constructor to instantiate seed given a seed.
-     *
-     * @param seed
+     * @brief Constructor for Seed with a specified seed value.
+     * @param seed The seed value to set.
      */
     Seed(int seed);
 
     /**
-     * @brief Private destructor to prevent deletion through pointers.
+     * @brief Generate a random seed value within the allowed range.
+     * @return The generated random seed.
      */
-    ~Seed();
+    int generateRandomSeed() const;
 
-    // Private data members
-    int seedValue;
-
-    // Private static pointer to the singleton instance
-    static Seed *instance;
+    int seedValue;         ///< The current seed value.
+    bool isSeedSet;        ///< Flag to track whether a seed is explicitly set.
+    static Seed *instance; ///< Singleton instance of Seed.
 };
 
-#endif // SEED_H
+#endif

@@ -107,7 +107,7 @@ private:
      * @param weights The vector of weights to be used for fitness computation.
      * @return The computed fitness value.
      */
-    static double computeFitness(const Data &data, std::vector<double> &weights, const double &alpha = 0.5);
+    static double computeFitness(const Data &data, std::vector<double> weights, const double &alpha = 0.5);
 };
 
 #endif // ML_TOOLS_H

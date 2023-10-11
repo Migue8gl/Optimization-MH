@@ -39,7 +39,7 @@ public:
      * @param data Instance of the Data class, containing information about data labels and data points.
      * @param k The number of neighbors (k) for testing the KNN classifier (default is 1).
      */
-    static void testKNNClassifier(const Data &data, int k = 1);
+    static void testKNNClassifier(const Data &data, const unsigned int &k = 1);
 
     /**
      * @brief Test and print information about shuffled data.

@@ -49,7 +49,17 @@ public:
      *
      * @param data Data to be normalized.
      */
-    static void normalizeData(Data &data);
+    static void normalizeDataCeroOne(Data &data);
+
+    /**
+     * @brief Normalize a two-dimensional data matrix to the [-1, 1] range.
+     *
+     * This function normalizes each element in the matrix to fall within the [-1, 1] range while preserving
+     * the data's relative proportions.
+     *
+     * @param data Data to be normalized.
+     */
+    static void normalizeDataMinusOneOne(Data &data);
 
     /**
      * @brief Generate a random uniform integer number in a given range.

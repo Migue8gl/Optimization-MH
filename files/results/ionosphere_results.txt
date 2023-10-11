@@ -8,35 +8,35 @@ Calling MLTools::kCrossValidation with KNN
 [PART 1] | Classification Rate: 0.867857
 [PART 1] | Reduction Rate: 0
 [PART 1] | Fitness: 0.433929
-[PART 1] | Execution Time: 7.06 ms
+[PART 1] | Execution Time: 6.46 ms
 
 --------------------------------------
 
 [PART 2] | Classification Rate: 0.86
 [PART 2] | Reduction Rate: 0.00
 [PART 2] | Fitness: 0.43
-[PART 2] | Execution Time: 7.00 ms
+[PART 2] | Execution Time: 6.53 ms
 
 --------------------------------------
 
 [PART 3] | Classification Rate: 0.86
 [PART 3] | Reduction Rate: 0.00
 [PART 3] | Fitness: 0.43
-[PART 3] | Execution Time: 7.16 ms
+[PART 3] | Execution Time: 6.63 ms
 
 --------------------------------------
 
 [PART 4] | Classification Rate: 0.86
 [PART 4] | Reduction Rate: 0.00
 [PART 4] | Fitness: 0.43
-[PART 4] | Execution Time: 7.20 ms
+[PART 4] | Execution Time: 6.64 ms
 
 --------------------------------------
 
 [PART 5] | Classification Rate: 0.86
 [PART 5] | Reduction Rate: 0.00
 [PART 5] | Fitness: 0.43
-[PART 5] | Execution Time: 7.21 ms
+[PART 5] | Execution Time: 6.69 ms
 
 --------------------------------------
 
@@ -45,7 +45,7 @@ Calling MLTools::kCrossValidation with KNN
 Average Classification Rate: 0.86
 Average Reduction Rate: 0.00
 Average Fitness: 0.43
-Total Execution Time: 35.88 ms
+Total Execution Time: 33.14 ms
 
 --------------------------------------------------
 Calling MLTools::kCrossValidation with localSearch
@@ -53,45 +53,45 @@ Calling MLTools::kCrossValidation with localSearch
 
 ***** (CROSS VALIDATION K = 5) *****
 
-[PART 1] | Classification Rate: 0.90
-[PART 1] | Reduction Rate: 0.88
-[PART 1] | Fitness: 0.89
-[PART 1] | Execution Time: 207.61 ms
+[PART 1] | Classification Rate: 0.88
+[PART 1] | Reduction Rate: 0.85
+[PART 1] | Fitness: 0.87
+[PART 1] | Execution Time: 115.06 ms
 
 --------------------------------------
 
-[PART 2] | Classification Rate: 0.90
-[PART 2] | Reduction Rate: 0.79
-[PART 2] | Fitness: 0.85
-[PART 2] | Execution Time: 103.57 ms
+[PART 2] | Classification Rate: 0.81
+[PART 2] | Reduction Rate: 0.91
+[PART 2] | Fitness: 0.86
+[PART 2] | Execution Time: 85.71 ms
 
 --------------------------------------
 
-[PART 3] | Classification Rate: 0.90
+[PART 3] | Classification Rate: 0.88
 [PART 3] | Reduction Rate: 0.88
-[PART 3] | Fitness: 0.89
-[PART 3] | Execution Time: 104.29 ms
+[PART 3] | Fitness: 0.88
+[PART 3] | Execution Time: 120.69 ms
 
 --------------------------------------
 
-[PART 4] | Classification Rate: 0.90
+[PART 4] | Classification Rate: 0.86
 [PART 4] | Reduction Rate: 0.85
-[PART 4] | Fitness: 0.87
-[PART 4] | Execution Time: 119.96 ms
+[PART 4] | Fitness: 0.86
+[PART 4] | Execution Time: 138.73 ms
 
 --------------------------------------
 
-[PART 5] | Classification Rate: 0.89
-[PART 5] | Reduction Rate: 0.85
-[PART 5] | Fitness: 0.87
-[PART 5] | Execution Time: 106.35 ms
+[PART 5] | Classification Rate: 0.85
+[PART 5] | Reduction Rate: 0.88
+[PART 5] | Fitness: 0.86
+[PART 5] | Execution Time: 108.57 ms
 
 --------------------------------------
 
 ***** (FINAL RESULTS) *****
 
-Average Classification Rate: 0.90
-Average Reduction Rate: 0.85
-Average Fitness: 0.88
-Total Execution Time: 642.06 ms
+Average Classification Rate: 0.86
+Average Reduction Rate: 0.88
+Average Fitness: 0.87
+Total Execution Time: 569.06 ms
 

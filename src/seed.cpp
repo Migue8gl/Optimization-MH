@@ -1,5 +1,6 @@
 #include "seed.h"
 #include "tools_helper.h"
+#include <random> // Include the <random> header for random number generation
 
 Seed *Seed::instance = nullptr;
 
@@ -7,10 +8,7 @@ Seed &Seed::getInstance()
 {
     if (!instance)
     {
-        // Use integer limits for generating a random integer seed
-        int minSeed = 0;
-        int maxSeed = std::numeric_limits<int>::max();
-        instance = new Seed(ToolsHelper::generateUniformRandomNumberInteger(minSeed, maxSeed));
+        instance = new Seed();
     }
     return *instance;
 }
@@ -18,15 +16,29 @@ Seed &Seed::getInstance()
 void Seed::setSeed(int value)
 {
     seedValue = value;
+    isSeedSet = true;
 }
 
 int Seed::getSeed() const
 {
-    return seedValue;
+    if (isSeedSet)
+    {
+        return seedValue;
+    }
+    else
+    {
+        return generateRandomSeed();
+    }
 }
 
-Seed::Seed() : seedValue(0) {}
+int Seed::generateRandomSeed() const
+{
+    // Generate a random seed within the allowed range
+    return ToolsHelper::generateUniformRandomNumberInteger(0, std::numeric_limits<int>::max());
+}
 
-Seed::Seed(int seed) : seedValue(seed) {}
+Seed::Seed() : seedValue(generateRandomSeed()), isSeedSet(false) {}
+
+Seed::Seed(int seed) : seedValue(seed), isSeedSet(true) {}
 
 Seed::~Seed() {}
