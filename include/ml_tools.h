@@ -75,6 +75,17 @@ public:
      */
     static std::vector<double> localSearch(const Data &data, const std::string &opt = "");
 
+    /**
+     * @brief Perform the Monarch Butterfly Optimization (MBO) algorithm.
+     *
+     * This static function performs the Monarch Butterfly Optimization (MBO) algorithm on the given data.
+     *
+     * @param data The data object containing the dataset and labels.
+     * @param ls Flag indicating whether to perform local search.
+     * @return The optimized solution found by the algorithm.
+     */
+    static std::vector<double> mbo(const Data &data, bool ls);
+
 private:
     /**
      * @brief Calculate the Euclidean distance between two data points.
@@ -105,9 +116,59 @@ private:
      *
      * @param data The data object containing the dataset and labels.
      * @param weights The vector of weights to be used for fitness computation.
+     * @param alpha The alpha value (default: 0.5) for combining classification and reduction rates.
      * @return The computed fitness value.
      */
     static double computeFitness(const Data &data, std::vector<double> weights, const double &alpha = 0.5);
+
+    /**
+     * @brief Calculate the fitness values for a population of weight vectors.
+     *
+     * This function calculates the fitness values for a population of weight vectors based on the provided data.
+     *
+     * @param data The data object containing the dataset and labels.
+     * @param populationWeights A vector of weight vectors representing the population.
+     * @param alpha The alpha value (default: 0.5) for combining classification and reduction rates.
+     * @return A vector of computed fitness values for the population.
+     */
+    static std::vector<double> computePopulationFitness(const Data &data, std::vector<std::vector<double>> populationWeights, const double &alpha = 0.5);
+
+    /**
+     * @brief Generate a random number using the Levy flight distribution.
+     *
+     * This static function generates a random number using the Levy flight distribution with specified parameters.
+     *
+     * @return The generated random number.
+     */
+    static double levyFlight();
+
+    /**
+     * @brief Perform migration of subpopulations between mariposas.
+     *
+     * This static function performs migration between two subpopulations of mariposas.
+     *
+     * @param subpob1 The first subpopulation.
+     * @param subpob2 The second subpopulation.
+     * @param period The migration period.
+     * @param p The migration probability.
+     */
+    static void migration(std::vector<std::vector<double>> &subpob1, std::vector<std::vector<double>> &subpob2, double period, double p);
+
+    /**
+     * @brief Adjust the subpopulations based on fitness values.
+     *
+     * This static function adjusts the subpopulations based on fitness values and other parameters.
+     *
+     * @param subpob1 The first subpopulation.
+     * @param subpob2 The second subpopulation.
+     * @param indexbest1 The indices of the best mariposas in subpob1.
+     * @param indexbest2 The indices of the best mariposas in subpob2.
+     * @param p The adjustment probability.
+     * @param fitnessPopulation The fitness values of the population.
+     * @param BAR The threshold for adjustment.
+     * @param alpha The adjustment parameter.
+     */
+    static void adjust(std::vector<std::vector<double>> &subpob1, std::vector<std::vector<double>> &subpob2, const std::vector<int> &indexbest1, const std::vector<int> &indexbest2, double p, const std::vector<double> &fitnessPopulation, double BAR, double alpha);
 };
 
 #endif // ML_TOOLS_H

@@ -129,7 +129,7 @@ std::vector<Data> Data::createPartitions(int k) const
 
     // Shuffle the data and class vectors together
     std::vector<std::pair<std::vector<double>, char>> shuffled_data;
-    for (size_t i = 0; i < data_matrix.size(); ++i)
+    for (unsigned int i = 0; i < data_matrix.size(); ++i)
     {
         shuffled_data.push_back(std::make_pair(data_matrix[i], class_vector[i]));
     }
@@ -141,7 +141,7 @@ std::vector<Data> Data::createPartitions(int k) const
     std::vector<Data> partitions(k);
 
     // Fill partitions while preserving classes
-    for (size_t i = 0; i < shuffled_data.size(); ++i)
+    for (unsigned int i = 0; i < shuffled_data.size(); ++i)
     {
         partitions[i % k].addDataPoint(shuffled_data[i].first, shuffled_data[i].second);
     }
