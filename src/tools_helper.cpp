@@ -140,7 +140,9 @@ void ToolsHelper::normalizeDataMinusOneOne(Data &data)
 int ToolsHelper::generateUniformRandomNumberInteger(int min, int max, std::random_device::result_type seed)
 {
     std::default_random_engine generator(seed);
-    std::uniform_int_distribution<int> distribution(min, max);
+    std::uniform_int_distribution<> distribution(min, max);
+
+    //std::cout << distribution(generator) << " -- Min: " << min << " Max: " << max << std::endl;
 
     return distribution(generator);
 }

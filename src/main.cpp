@@ -97,6 +97,14 @@ int main(int argc, char *argv[])
             // Call the second function
             MLTools::kCrossValidation(data, MLTools::localSearch);
 
+            // Separator for the third function call
+            std::cout << "------------------------------------------" << std::endl;
+            std::cout << "Calling MLTools::kCrossValidation with MBO" << std::endl;
+            std::cout << "------------------------------------------" << std::endl;
+
+            // Call the third function
+            MLTools::kCrossValidation(data, MLTools::mbo);
+
             if (run_test)
             {
                 Tests::runTests(data, option);

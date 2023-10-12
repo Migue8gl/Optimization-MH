@@ -11,7 +11,7 @@ class MLTools
 {
 public:
     // Define a optimization function type for the ml algorithm
-    using Optimizer = std::vector<double> (*)(const Data &, const std::string &);
+    using Optimizer = std::vector<double> (*)(const Data &, std::vector<double> &weights);
 
     /**
      * @brief Perform k-Nearest Neighbors (k-NN) classification to predict the class of an element.
@@ -37,7 +37,7 @@ public:
      * @param data An instance of the Data class containing information about data labels and data points.
      * @return std::vector<double> The weights for each of the data points
      */
-    static std::vector<double> KNN(const Data &data, const std::string &opt = "");
+    static std::vector<double> KNN(const Data &data, std::vector<double> &weights);
 
     /**
      * @brief Perform k-fold cross-validation.
@@ -73,7 +73,7 @@ public:
      * @return A vector of double values representing the optimized weights for the dataset.
      *
      */
-    static std::vector<double> localSearch(const Data &data, const std::string &opt = "");
+    static std::vector<double> localSearch(const Data &data, std::vector<double> &weights);
 
     /**
      * @brief Perform the Monarch Butterfly Optimization (MBO) algorithm.
@@ -84,7 +84,7 @@ public:
      * @param ls Flag indicating whether to perform local search.
      * @return The optimized solution found by the algorithm.
      */
-    static std::vector<double> mbo(const Data &data, bool ls);
+    static std::vector<double> mbo(const Data &data, std::vector<double> &weights);
 
 private:
     /**
@@ -131,7 +131,7 @@ private:
      * @param alpha The alpha value (default: 0.5) for combining classification and reduction rates.
      * @return A vector of computed fitness values for the population.
      */
-    static std::vector<double> computePopulationFitness(const Data &data, std::vector<std::vector<double>> populationWeights, const double &alpha = 0.5);
+    static std::vector<double> computePopulationFitness(const Data &data, const std::vector<std::vector<double>> &populationWeights, const double &alpha = 0.5);
 
     /**
      * @brief Generate a random number using the Levy flight distribution.
@@ -161,14 +161,12 @@ private:
      *
      * @param subpob1 The first subpopulation.
      * @param subpob2 The second subpopulation.
-     * @param indexbest1 The indices of the best mariposas in subpob1.
-     * @param indexbest2 The indices of the best mariposas in subpob2.
+     * @param bestButterfly The best butterfly from the population.
      * @param p The adjustment probability.
-     * @param fitnessPopulation The fitness values of the population.
      * @param BAR The threshold for adjustment.
      * @param alpha The adjustment parameter.
      */
-    static void adjust(std::vector<std::vector<double>> &subpob1, std::vector<std::vector<double>> &subpob2, const std::vector<int> &indexbest1, const std::vector<int> &indexbest2, double p, const std::vector<double> &fitnessPopulation, double BAR, double alpha);
+    static void adjust(std::vector<std::vector<double>> &subpob2, const std::vector<double> &bestButterfly, double p, double BAR, double alpha);
 };
 
 #endif // ML_TOOLS_H

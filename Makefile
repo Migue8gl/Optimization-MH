@@ -1,5 +1,5 @@
 CXX = clang++
-CXXFLAGS = -std=c++2a -O2 -I./include
+CXXFLAGS = -std=c++2a -O2 -I./include -pthread -fsanitize=address,leak -g -fno-omit-frame-pointer
 SRCDIR = src
 FILEDIR = files
 INCDIR = include

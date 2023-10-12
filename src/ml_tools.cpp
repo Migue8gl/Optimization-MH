@@ -10,6 +10,7 @@
 #include <iomanip>
 #include <thread>
 #include "seed.h"
+#include <future>
 
 char MLTools::KNNClassifier(const Data &data, const std::vector<double> &element, const std::vector<double> &weigths, const unsigned int &k)
 {
@@ -25,7 +26,7 @@ char MLTools::KNNClassifier(const Data &data, const std::vector<double> &element
 
         std::vector<std::pair<double, char>> distancesAndClasses;
 
-        for (size_t i = 0; i < dataSize; ++i)
+        for (unsigned i = 0; i < dataSize; ++i)
         {
             if (element != dataMatrix[i])
             { // Skip the same element
@@ -62,7 +63,7 @@ char MLTools::KNNClassifier(const Data &data, const std::vector<double> &element
     }
 }
 
-std::vector<double> MLTools::KNN(const Data &data, const std::string &opt)
+std::vector<double> MLTools::KNN(const Data &data, std::vector<double> &weights)
 {
     // Weigth vector to one, knn does not modify weights
     return std::vector<double>(data.getData()[0].size(), 1.0);
@@ -100,7 +101,11 @@ void MLTools::kCrossValidation(const Data &data, const MLTools::Optimizer &optim
             }
         }
 
-        std::vector<double> weights = optimizer(trainingData, option);
+        // Test
+        std::vector<double> w(data.getData()[0].size());
+        std::generate(w.begin(), w.end(), [&]()
+                      { return ToolsHelper::generateNormalRandomNumber(0.0, std::sqrt(0.3), Seed::getInstance().getSeed()); });
+        std::vector<double> weights = optimizer(trainingData, w);
 
         for (double &wi : weights)
         {
@@ -141,7 +146,7 @@ void MLTools::kCrossValidation(const Data &data, const MLTools::Optimizer &optim
     std::cout << "Total Execution Time: " << std::fixed << std::setprecision(2) << totalTime.count() << " ms\n\n";
 }
 
-std::vector<double> MLTools::localSearch(const Data &data, const std::string &opt)
+std::vector<double> MLTools::localSearch(const Data &data, std::vector<double> &weights)
 {
     // Variables used
     const double variance = 0.3;
@@ -157,11 +162,12 @@ std::vector<double> MLTools::localSearch(const Data &data, const std::string &op
 
     int counter = 0, neighbourCount = 0;
     double maxFunctionValue = -std::numeric_limits<double>::infinity();
-    std::vector<double> w(data.getData()[0].size());
+    /*std::vector<double> w(data.getData()[0].size());
 
     // Initialize w with random normal values in one line
     std::generate(w.begin(), w.end(), [&]()
-                  { return ToolsHelper::generateNormalRandomNumber(mean, std::sqrt(variance), Seed::getInstance().getSeed()); });
+                  { return ToolsHelper::generateNormalRandomNumber(mean, std::sqrt(variance), Seed::getInstance().getSeed()); });*/
+    std::vector<double> w = weights;
 
     double wAux;
     double objetiveFunction = MLTools::computeFitness(data, w, alpha);
@@ -177,7 +183,7 @@ std::vector<double> MLTools::localSearch(const Data &data, const std::string &op
         w[randIndex] += ToolsHelper::generateNormalRandomNumber(mean, std::sqrt(variance), Seed::getInstance().getSeed());
 
         // Ensure w[i] is within the bounds [0, 1]
-        // w[randIndex] = std::max(0.0, std::min(1.0, w[randIndex]));
+        w[randIndex] = std::max(0.0, std::min(1.0, w[randIndex]));
         if (w[randIndex] < 0.1 && w[randIndex] > -0.1)
         {
             w[randIndex] = 0.0; // Modify the weights directly in the input vector
@@ -224,7 +230,7 @@ double MLTools::computeFitness(const Data &data, std::vector<double> weights, co
     return fitness;
 }
 
-std::vector<double> MLTools::computePopulationFitness(const Data &data, std::vector<std::vector<double>> populationWeights, const double &alpha)
+std::vector<double> MLTools::computePopulationFitness(const Data &data, const std::vector<std::vector<double>> &populationWeights, const double &alpha)
 {
     std::vector<double> fitness(populationWeights.size(), 0.0);
 
@@ -294,8 +300,7 @@ double MLTools::levyFlight()
     const double alpha = 1.5; // You can adjust this value to control the Levy flight characteristics
     const double scale = 0.01;
 
-    std::random_device rd;
-    std::mt19937 eng(rd);
+    std::mt19937 eng(Seed::getInstance().getSeed());
 
     // Levy flight formula
     std::gamma_distribution<double> dist(alpha, scale);
@@ -305,119 +310,111 @@ double MLTools::levyFlight()
 
 void MLTools::migration(std::vector<std::vector<double>> &subpob1, std::vector<std::vector<double>> &subpob2, double period, double p)
 {
-    for (std::vector<double> &butterfly : subpob1)
+    for (unsigned int i = 0; i < subpob1.size(); ++i)
     {
-        for (double &value : butterfly)
+        for (unsigned int kIndex = 0; kIndex < subpob1[i].size(); ++kIndex)
         {
             double n = ToolsHelper::generateUniformRandomNumberDouble(0, 1, Seed::getInstance().getSeed()) * period;
             if (n <= p)
             {
-                int index = ToolsHelper::generateUniformRandomNumberDouble(0, 1, Seed::getInstance().getSeed()) * subpob1.size();
-                value = subpob1[index][&value - &butterfly[0]];
+                int index = ToolsHelper::generateUniformRandomNumberInteger(0, subpob1.size() - 1, Seed::getInstance().getSeed());
+                subpob1[i][kIndex] = subpob1[index][kIndex];
             }
             else
             {
-                int index = ToolsHelper::generateUniformRandomNumberDouble(0, 1, Seed::getInstance().getSeed()) * subpob2.size();
-                value = subpob2[index][&value - &butterfly[0]];
+                int index = ToolsHelper::generateUniformRandomNumberInteger(0, subpob2.size() - 1, Seed::getInstance().getSeed());
+                subpob1[i][kIndex] = subpob2[index][kIndex];
             }
         }
     }
 }
 
-void MLTools::adjust(std::vector<std::vector<double>> &subpob1, std::vector<std::vector<double>> &subpob2, const std::vector<int> &indexbest1, const std::vector<int> &indexbest2, double p, const std::vector<double> &fitnessPopulation, double BAR, double alpha)
+void MLTools::adjust(std::vector<std::vector<double>> &subpob2, const std::vector<double> &bestButterfly, double p, double BAR, double alpha)
 {
-    for (std::vector<double> &butterfly : subpob2)
+    for (unsigned int i = 0; i < subpob2.size(); ++i)
     {
-        for (double &value : butterfly)
+        for (unsigned int kIndex = 0; kIndex < subpob2[i].size(); ++kIndex)
         {
             double n = ToolsHelper::generateUniformRandomNumberDouble(0, 1, Seed::getInstance().getSeed());
 
             if (n <= p)
             {
-                int i = &value - &butterfly[0];
-                if (fitnessPopulation[indexbest1[i]] > fitnessPopulation[indexbest2[i] + subpob1.size()])
-                {
-                    value = subpob1[indexbest1[i]][i];
-                }
-                else
-                {
-                    value = subpob2[indexbest2[i]][i];
-                }
+                subpob2[i][kIndex] = bestButterfly[kIndex];
             }
             else
             {
-                int index = ToolsHelper::generateUniformRandomNumberDouble(0, 1, Seed::getInstance().getSeed()) * subpob2.size();
-                value = subpob2[index][&value - &butterfly[0]];
+                int index = ToolsHelper::generateUniformRandomNumberInteger(0, subpob2.size() - 1, Seed::getInstance().getSeed());
+                subpob2[i][kIndex] = subpob2[index][kIndex];
 
                 if (n > BAR)
                 {
-                    double dx = levyFlight();
-                    value += alpha * (dx - 0.5);
+                    double dx = levyFlight(); // Implement this function
+                    subpob2[i][kIndex] += alpha * (dx - 0.5);
+                    subpob2[i][kIndex] = std::max(0.0, std::min(1.0, subpob2[i][kIndex]));
                 }
             }
         }
     }
 }
 
-std::vector<double> MLTools::mbo(const Data &data, bool ls)
+std::vector<double> MLTools::mbo(const Data &data, std::vector<double> &weights)
 {
     double variance = 0.3, mean = 0.0;
-    double alpha = 0.5;
 
-    // Initialize population of mariposas NP
-    std::vector<std::vector<double>> np(data.size());
-    std::vector<double> w(data.getData()[0].size());
-    for (std::vector<double> &bf : np)
+    // Initialize population of butterflies NP
+    std::vector<std::vector<double>> np(data.size(), std::vector<double>(data.getData()[0].size()));
+
+    for (std::vector<double> &butterfly : np)
     {
-        std::generate(bf.begin(), bf.end(), ToolsHelper::generateNormalRandomNumber(mean, std::sqrt(variance), Seed::getInstance().getSeed()));
+        std::generate(butterfly.begin(), butterfly.end(), [mean, variance]()
+                      { return ToolsHelper::generateNormalRandomNumber(mean, std::sqrt(variance), Seed::getInstance().getSeed()); });
     }
 
     int t = 1;
     const int maxGen = 10;
-    double BAR = 5.0 / 12.0;
-    double p = 5.0 / 12.0;
-    double periodo = 1.2;
-    double smax = 1.0;
-    double alpha = 0;
+    const double BAR = 5.0 / 12.0;
+    const double p = 5.0 / 12.0;
+    const double periodo = 1.2;
+    const double smax = 1.0;
+    double alpha = 0.0;
     int np1Size = static_cast<int>(p * np.size());
-    int np2Size = np.size() - np1Size;
-    double cont = 0;
     std::vector<double> fitnessPopulation;
-    std::vector<int> indices1(np1Size), indices2(np2Size);
-    std::iota(indices1.begin(), indices1.end(), 0);
-    std::iota(indices2.begin(), indices2.end(), 0);
-    fitnessPopulation = MLTools::computePopulationFitness(data, np, alpha); // Replace with your actual evaluation function
+
+    fitnessPopulation = MLTools::computePopulationFitness(data, np, 0.5); // Replace with your actual evaluation function
 
     while (t < maxGen)
     {
-        // Sort in descending order of fitness
-        std::sort(indices1.begin(), indices1.end(), [&fitnessPopulation](int a, int b)
-                  { return fitnessPopulation[a] > fitnessPopulation[b]; });
-        std::sort(indices2.begin(), indices2.end(), [&fitnessPopulation](int a, int b)
-                  { return fitnessPopulation[a] > fitnessPopulation[b]; });
+        double bestFitness = fitnessPopulation[0];
+        unsigned int bestSolutionIndex = 0;
 
-        std::vector<std::vector<double>> np1, np2;
-        cont = 0;
-        for (const std::vector<double> &bf : np)
+        // Find the best butterfly in the np population
+        for (unsigned int i = 0; i < fitnessPopulation.size(); ++i)
         {
-            if (cont < np1Size)
+            if (fitnessPopulation[i] > bestFitness)
             {
-                np1.push_back(bf);
+                bestFitness = fitnessPopulation[i];
+                bestSolutionIndex = i;
             }
-            else
-            {
-                np2.push_back(bf);
-            }
-            cont++;
         }
+
+        // Keep the best butterfly
+        std::vector<double> bestButterfly = np[bestSolutionIndex];
+
+        // Divide the remaining population into two subpopulations
+        std::vector<std::vector<double>> np1(np.begin(), np.begin() + np1Size);
+        std::vector<std::vector<double>> np2(np.begin() + np1Size, np.end());
 
         alpha = smax / (t * t);
 
-        std::thread mig_thread(migration, std::ref(np1), std::ref(np2), periodo, p);
-        std::thread aju_thread(adjust, std::ref(np1), std::ref(np2), indices1, indices2, p, fitnessPopulation, BAR, alpha);
+        // Start mig_thread asynchronously
+        std::future<void> mig_future = std::async(std::launch::async, migration, std::ref(np1), std::ref(np2), periodo, p);
 
-        mig_thread.join();
-        aju_thread.join();
+        // Start aju_thread asynchronously
+        std::future<void> aju_future = std::async(std::launch::async, adjust, std::ref(np2), bestButterfly, p, BAR, alpha);
+
+        // Wait for both threads to complete
+        mig_future.get();
+        aju_future.get();
 
         // Copy the data from np1 and np2 back to the np array
         np = np1;
@@ -425,9 +422,8 @@ std::vector<double> MLTools::mbo(const Data &data, bool ls)
 
         std::mt19937 gen(Seed::getInstance().getSeed());
         std::shuffle(np.begin(), np.end(), gen);
-        fitnessPopulation = MLTools::computePopulationFitness(data, np, alpha); // Replace with your actual evaluation function
+        fitnessPopulation = MLTools::computePopulationFitness(data, np, 0.5); // Replace with your actual evaluation function
         t++;
-        cont = 0;
     }
 
     double best_eval = fitnessPopulation[0];
@@ -441,8 +437,7 @@ std::vector<double> MLTools::mbo(const Data &data, bool ls)
         }
     }
 
-    if (ls)
-        MLTools::localSearch(data, np[best_solution_index]); // Implement localSearch function
+    // MLTools::localSearch(data, np[best_solution_index]); // Implement localSearch function
 
     return np[best_solution_index];
 }
