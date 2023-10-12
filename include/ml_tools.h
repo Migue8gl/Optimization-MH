@@ -119,7 +119,7 @@ private:
      * @param alpha The alpha value (default: 0.5) for combining classification and reduction rates.
      * @return The computed fitness value.
      */
-    static double computeFitness(const Data &data, std::vector<double> weights, const double &alpha = 0.5);
+    static double computeFitness(const Data &data, std::vector<double> &weights, const double &alpha = 0.5);
 
     /**
      * @brief Calculate the fitness values for a population of weight vectors.
@@ -131,7 +131,7 @@ private:
      * @param alpha The alpha value (default: 0.5) for combining classification and reduction rates.
      * @return A vector of computed fitness values for the population.
      */
-    static std::vector<double> computePopulationFitness(const Data &data, const std::vector<std::vector<double>> &populationWeights, const double &alpha = 0.5);
+    static std::vector<double> computePopulationFitness(const Data &data, std::vector<std::vector<double>> &populationWeights, const double &alpha = 0.5);
 
     /**
      * @brief Generate a random number using the Levy flight distribution.
@@ -167,6 +167,20 @@ private:
      * @param alpha The adjustment parameter.
      */
     static void adjust(std::vector<std::vector<double>> &subpob2, const std::vector<double> &bestButterfly, double p, double BAR, double alpha);
+
+    /**
+     * @brief Implements elitism by selecting and preserving the best individuals in the population.
+     *
+     * This function selects the top-performing individuals (butterflies) based on their fitness
+     * and replaces the worst-performing individuals with the selected elite individuals.
+     *
+     * @param data The data used for evaluating the fitness of individuals.
+     * @param np The population of individuals represented as a vector of vectors.
+     * @param numElite The number of top-performing individuals to preserve as elite.
+     *
+     * @return The population with the worst individuals replaced by the elite individuals.
+     */
+    static std::vector<std::vector<double>> elitism(const Data &data, std::vector<std::vector<double>> &np, unsigned int numElite);
 };
 
 #endif // ML_TOOLS_H

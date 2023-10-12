@@ -207,7 +207,7 @@ std::vector<double> MLTools::localSearch(const Data &data, std::vector<double> &
     return w;
 }
 
-double MLTools::computeFitness(const Data &data, std::vector<double> weights, const double &alpha)
+double MLTools::computeFitness(const Data &data, std::vector<double> &weights, const double &alpha)
 {
     double classificationRate = 0.0;
     double reductionRate = 0.0;
@@ -230,7 +230,7 @@ double MLTools::computeFitness(const Data &data, std::vector<double> weights, co
     return fitness;
 }
 
-std::vector<double> MLTools::computePopulationFitness(const Data &data, const std::vector<std::vector<double>> &populationWeights, const double &alpha)
+std::vector<double> MLTools::computePopulationFitness(const Data &data, std::vector<std::vector<double>> &populationWeights, const double &alpha)
 {
     std::vector<double> fitness(populationWeights.size(), 0.0);
 
@@ -350,11 +350,41 @@ void MLTools::adjust(std::vector<std::vector<double>> &subpob2, const std::vecto
                 {
                     double dx = levyFlight(); // Implement this function
                     subpob2[i][kIndex] += alpha * (dx - 0.5);
-                    subpob2[i][kIndex] = std::max(0.0, std::min(1.0, subpob2[i][kIndex]));
                 }
             }
         }
     }
+}
+
+std::vector<std::vector<double>> MLTools::elitism(const Data &data, std::vector<std::vector<double>> &np, unsigned int numElite)
+{
+    std::vector<double> fitnessPopulation = MLTools::computePopulationFitness(data, np, 0.5);
+    std::vector<std::vector<double>> eliteButterflies;
+
+    // Encuentra los índices de las mariposas élite
+    std::vector<unsigned int> eliteIndices;
+    for (unsigned int i = 0; i < numElite; ++i)
+    {
+        unsigned int bestSolutionIndex = std::distance(fitnessPopulation.begin(), std::max_element(fitnessPopulation.begin(), fitnessPopulation.end()));
+        eliteIndices.push_back(bestSolutionIndex);
+        fitnessPopulation[bestSolutionIndex] = -std::numeric_limits<double>::max();
+    }
+
+    // Copia las mariposas élite
+    for (unsigned int index : eliteIndices)
+    {
+        eliteButterflies.push_back(np[index]);
+    }
+
+    // Reemplaza las peores mariposas por las mariposas élite
+    for (unsigned int i = 0; i < numElite; ++i)
+    {
+        unsigned int worstIndex = std::distance(fitnessPopulation.begin(), std::min_element(fitnessPopulation.begin(), fitnessPopulation.end()));
+        np[worstIndex] = eliteButterflies[i];
+        fitnessPopulation[worstIndex] = -std::numeric_limits<double>::max();
+    }
+
+    return np;
 }
 
 std::vector<double> MLTools::mbo(const Data &data, std::vector<double> &weights)
@@ -371,7 +401,9 @@ std::vector<double> MLTools::mbo(const Data &data, std::vector<double> &weights)
     }
 
     int t = 1;
-    const int maxGen = 10;
+    double delta = 0.1;
+    double error = 1.0;
+    const int maxGen = 30;
     const double BAR = 5.0 / 12.0;
     const double p = 5.0 / 12.0;
     const double periodo = 1.2;
@@ -380,9 +412,9 @@ std::vector<double> MLTools::mbo(const Data &data, std::vector<double> &weights)
     int np1Size = static_cast<int>(p * np.size());
     std::vector<double> fitnessPopulation;
 
-    fitnessPopulation = MLTools::computePopulationFitness(data, np, 0.5); // Replace with your actual evaluation function
+    fitnessPopulation = MLTools::computePopulationFitness(data, np, 0.5);
 
-    while (t < maxGen)
+    while (t < maxGen && error >= delta)
     {
         double bestFitness = fitnessPopulation[0];
         unsigned int bestSolutionIndex = 0;
@@ -393,15 +425,17 @@ std::vector<double> MLTools::mbo(const Data &data, std::vector<double> &weights)
             if (fitnessPopulation[i] > bestFitness)
             {
                 bestFitness = fitnessPopulation[i];
+                error = 1 - bestFitness;
                 bestSolutionIndex = i;
             }
         }
 
         // Keep the best butterfly
-        std::vector<double> bestButterfly = np[bestSolutionIndex];
+        std::vector<double> bestButterfly = MLTools::localSearch(data, np[bestSolutionIndex]); // Improvement of best butterfly
 
         // Divide the remaining population into two subpopulations
-        std::vector<std::vector<double>> np1(np.begin(), np.begin() + np1Size);
+        std::vector<std::vector<double>>
+            np1(np.begin(), np.begin() + np1Size);
         std::vector<std::vector<double>> np2(np.begin() + np1Size, np.end());
 
         alpha = smax / (t * t);
@@ -420,24 +454,27 @@ std::vector<double> MLTools::mbo(const Data &data, std::vector<double> &weights)
         np = np1;
         np.insert(np.end(), np2.begin(), np2.end());
 
+        int numElite = 3;
+        np = elitism(data, np, numElite);
+
         std::mt19937 gen(Seed::getInstance().getSeed());
         std::shuffle(np.begin(), np.end(), gen);
-        fitnessPopulation = MLTools::computePopulationFitness(data, np, 0.5); // Replace with your actual evaluation function
+        fitnessPopulation = MLTools::computePopulationFitness(data, np, 0.5);
         t++;
     }
 
-    double best_eval = fitnessPopulation[0];
-    unsigned int best_solution_index = 0;
+    double bestEval = fitnessPopulation[0];
+    unsigned int bestSolutionIndex = 0;
     for (unsigned int i = 0; i < fitnessPopulation.size(); ++i)
     {
-        if (fitnessPopulation[i] > best_eval)
+        if (fitnessPopulation[i] > bestEval)
         {
-            best_eval = fitnessPopulation[i];
-            best_solution_index = i;
+            bestEval = fitnessPopulation[i];
+            bestSolutionIndex = i;
         }
     }
 
-    // MLTools::localSearch(data, np[best_solution_index]); // Implement localSearch function
+    np[bestSolutionIndex] = MLTools::localSearch(data, np[bestSolutionIndex]); // Implement localSearch function
 
-    return np[best_solution_index];
+    return np[bestSolutionIndex];
 }
