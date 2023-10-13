@@ -58,7 +58,7 @@ void Tests::testKNNClassifier(const Data &data, const unsigned int &k)
     std::vector<double> weights(data.getData()[0].size(), 1.0);
 
     // Compute the predicted class
-    char predictedClass = MLTools::KNNClassifier(data, element, weights, k);
+    char predictedClass = MLTools::kNNClassifier(data, element, weights, k);
 
     // Get the true class label (assuming it's available in the 'data' object)
     char trueClass = data.getLabels()[randomIndex];

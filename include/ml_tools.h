@@ -39,7 +39,7 @@ public:
      *
      * @throws std::invalid_argument if an invalid value of k is provided.
      */
-    static char KNNClassifier(const Data &data, const std::vector<double> &element, const std::vector<double> &weigths, const unsigned int &k = 1);
+    static char kNNClassifier(const Data &data, const std::vector<double> &element, const std::vector<double> &weigths, const unsigned int &k = 1);
 
     /**
      * @brief Function that returns weights for k-Nearest Neighbors classification.
@@ -53,7 +53,7 @@ public:
      * @param hyperParams A vector of hyperparameters (ignored for kNN).
      * @return std::vector<double> The weights for each of the data points (all set to 1 for kNN).
      */
-    static std::vector<double> KNN(const Data &data, std::vector<double> &weights, std::vector<std::string> &hyperParams);
+    static std::vector<double> knn(const Data &data, std::vector<double> &weights, std::vector<std::string> &hyperParams);
 
     /**
      * @brief Perform k-fold cross-validation.

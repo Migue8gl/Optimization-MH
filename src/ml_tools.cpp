@@ -13,7 +13,7 @@
 #include <future>
 #include <functional>
 
-char MLTools::KNNClassifier(const Data &data, const std::vector<double> &element, const std::vector<double> &weigths, const unsigned int &k)
+char MLTools::kNNClassifier(const Data &data, const std::vector<double> &element, const std::vector<double> &weigths, const unsigned int &k)
 {
     {
         unsigned int dataSize = data.size();
@@ -64,7 +64,7 @@ char MLTools::KNNClassifier(const Data &data, const std::vector<double> &element
     }
 }
 
-std::vector<double> MLTools::KNN(const Data &data, std::vector<double> &weights, std::vector<std::string> &hyperParams)
+std::vector<double> MLTools::knn(const Data &data, std::vector<double> &weights, std::vector<std::string> &hyperParams)
 {
     // Weigth vector to one, knn does not modify weights
     return std::vector<double>(data.getData()[0].size(), 1.0);
@@ -74,7 +74,7 @@ void MLTools::kCrossValidation(const Data &data, const Optimizer &optimizer, con
 {
     const double alpha = 0.5;
     double TS_average = 0, TR_average = 0, A_average = 0;
-    bool showPartitions = true;
+    bool showPartitions = false;
 
     auto overallStartTime = std::chrono::high_resolution_clock::now();
 
@@ -148,6 +148,8 @@ void MLTools::kCrossValidation(const Data &data, const Optimizer &optimizer, con
     auto overallEndTime = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::milli> totalTime = overallEndTime - overallStartTime;
 
+    if (!showPartitions)
+        std::cout << "\n\n";
     std::cout << "***** (FINAL RESULTS) *****\n"
               << std::endl;
     std::cout << "Average Classification Rate: " << TS_average / partitions.size() << std::endl;
@@ -310,7 +312,7 @@ double MLTools::computeAccuracy(const Data &sample, const std::vector<double> &w
 
     for (unsigned int i = 0; i < totalInstances; ++i)
     {
-        char predictedClass = MLTools::KNNClassifier(sample, samples[i], weights);
+        char predictedClass = MLTools::kNNClassifier(sample, samples[i], weights);
 
         if (predictedClass == classes[i])
             correctlyClassifiedInstances += 1.0;

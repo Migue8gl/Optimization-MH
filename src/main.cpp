@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
             std::cout << "------------------------------------------" << std::endl;
 
             // Call the first function
-            MLTools::kCrossValidation(data, MLTools::KNN, 5, hyperParams);
+            MLTools::kCrossValidation(data, MLTools::knn, 5, hyperParams);
 
             // Separator for the second function call
             std::cout << "--------------------------------------------------" << std::endl;
