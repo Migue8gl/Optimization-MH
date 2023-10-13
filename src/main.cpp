@@ -8,14 +8,13 @@
 #include "seed.h"
 #include "ml_tools.h"
 
-
 int main(int argc, char *argv[])
 {
     if (argc > 6)
     {
         std::cerr << "[ERROR] Incorrect number of arguments." << std::endl;
-        std::cerr << "Usage: ./main -s {seed} -d {dataset}[1-3] -t {run_tests}" << std::endl;
-        std::cerr << "Where [1-3] corresponds to: 1=spectf-heart, 2=parkinsons, 3=ionosphere" << std::endl;
+        std::cerr << "Usage: ./main -s {seed} -d {dataset}[1-4] -t {run_tests}" << std::endl;
+        std::cerr << "Where [1-4] corresponds to: 1=spectf-heart, 2=parkinsons, 3=ionosphere, 4=diabetes" << std::endl;
         return 1;
     }
 
@@ -44,8 +43,8 @@ int main(int argc, char *argv[])
         else
         {
             std::cerr << "[ERROR] Unrecognized parameters." << std::endl;
-            std::cerr << "Usage: ./main -s {seed} -d {dataset}[1-3] -t {run_tests}" << std::endl;
-            std::cerr << "Where [1-3] corresponds to: 1=spectf-heart, 2=parkinsons, 3=ionosphere" << std::endl;
+            std::cerr << "Usage: ./main -s {seed} -d {dataset}[1-4] -t {run_tests}" << std::endl;
+            std::cerr << "Where [1-4] corresponds to: 1=spectf-heart, 2=parkinsons, 3=ionosphere, 4=diabetes" << std::endl;
             return 1;
         }
     }
@@ -63,31 +62,36 @@ int main(int argc, char *argv[])
     case 3:
         path.push_back("./data/ionosphere.arff");
         break;
+    case 4:
+        path.push_back("./data/diabetes.arff");
+        break;
     default:
         path.push_back("./data/spectf-heart.arff");
         path.push_back("./data/parkinsons.arff");
         path.push_back("./data/ionosphere.arff");
+        path.push_back("./data/diabetes.arff");
         option = 0;
         cont = 1;
         break;
     }
 
-    try 
+    try
     {
         for (const std::string &p : path)
         {
             std::cout << "<------------------ " << ToolsHelper::getDatasetTitle(option + cont) << " ------------------>" << std::endl;
 
             Data data;
+            std::vector<std::string> hyperParams;
             data.readDataARFF(p);
-            ToolsHelper::normalizeDataCeroOne(data);
-            // Separator for the first function call
+            // ToolsHelper::normalizeDataZeroOne(data);
+            //  Separator for the first function call
             std::cout << "------------------------------------------" << std::endl;
             std::cout << "Calling MLTools::kCrossValidation with KNN" << std::endl;
             std::cout << "------------------------------------------" << std::endl;
 
             // Call the first function
-            MLTools::kCrossValidation(data, MLTools::KNN);
+            MLTools::kCrossValidation(data, MLTools::KNN, 5, hyperParams);
 
             // Separator for the second function call
             std::cout << "--------------------------------------------------" << std::endl;
@@ -95,7 +99,7 @@ int main(int argc, char *argv[])
             std::cout << "--------------------------------------------------" << std::endl;
 
             // Call the second function
-            MLTools::kCrossValidation(data, MLTools::localSearch);
+            MLTools::kCrossValidation(data, MLTools::localSearch, 5, hyperParams);
 
             // Separator for the third function call
             std::cout << "------------------------------------------" << std::endl;
@@ -103,15 +107,14 @@ int main(int argc, char *argv[])
             std::cout << "------------------------------------------" << std::endl;
 
             // Call the third function
-            MLTools::kCrossValidation(data, MLTools::mbo);
+            MLTools::kCrossValidation(data, MLTools::mbo, 5, hyperParams);
 
             if (run_test)
             {
                 Tests::runTests(data, option);
             }
 
-            if (cont != 0)
-                cont++;
+            cont++;
         }
     }
     catch (const std::exception &e)

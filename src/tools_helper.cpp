@@ -57,44 +57,44 @@ void ToolsHelper::displayDataInfo(const Data &data, const std::string &separator
     }
 }
 
-void ToolsHelper::normalizeDataCeroOne(Data &data)
+void ToolsHelper::normalizeDataZeroOne(Data &data)
 {
-    std::vector<std::vector<double>> data_matrix = data.getData();
-    if (data_matrix.empty() || data_matrix[0].empty())
+    std::vector<std::vector<double>> dataMatrix = data.getData();
+    if (dataMatrix.empty() || dataMatrix[0].empty())
     {
         return; // Handle empty data to avoid division by zero
     }
 
-    double max_item = -std::numeric_limits<double>::infinity();
-    double min_item = std::numeric_limits<double>::infinity();
+    double maxItem = -std::numeric_limits<double>::infinity();
+    double minItem = std::numeric_limits<double>::infinity();
 
     // Find the maximum and minimum values
-    for (const auto &row : data_matrix)
+    for (const auto &row : dataMatrix)
     {
         for (const double &item : row)
         {
-            max_item = std::max(max_item, item);
-            min_item = std::min(min_item, item);
+            maxItem = std::max(maxItem, item);
+            minItem = std::min(minItem, item);
         }
     }
 
     // Avoid division by zero if max_item and min_item are the same
-    if (max_item == min_item)
+    if (maxItem == minItem)
     {
         return;
     }
 
     // Normalize using x_iN = (x_i - min) / (max - min)
-    const double range = max_item - min_item;
-    for (auto &row : data_matrix)
+    const double range = maxItem - minItem;
+    for (auto &row : dataMatrix)
     {
         for (double &item : row)
         {
-            item = (item - min_item) / range;
+            item = (item - minItem) / range;
         }
     }
 
-    data.setData(data_matrix);
+    data.setData(dataMatrix);
 }
 
 void ToolsHelper::normalizeDataMinusOneOne(Data &data)
@@ -142,7 +142,7 @@ int ToolsHelper::generateUniformRandomNumberInteger(int min, int max, std::rando
     std::default_random_engine generator(seed);
     std::uniform_int_distribution<> distribution(min, max);
 
-    //std::cout << distribution(generator) << " -- Min: " << min << " Max: " << max << std::endl;
+    // std::cout << distribution(generator) << " -- Min: " << min << " Max: " << max << std::endl;
 
     return distribution(generator);
 }
@@ -177,3 +177,23 @@ std::string ToolsHelper::getDatasetTitle(const int &option)
         return "Unknown Dataset";
     }
 }
+
+void ToolsHelper::progress_bar(float progress)
+{
+    int barWidth = 70;
+
+    std::cout << "[";
+    int pos = barWidth * progress;
+    for (int i = 0; i < barWidth; ++i)
+    {
+        if (i < pos)
+            std::cout << "=";
+        else if (i == pos)
+            std::cout << ">";
+        else
+            std::cout << " ";
+    }
+    std::cout << "] " << int(progress * 100.0) << " %\r";
+    std::cout.flush();
+}
+

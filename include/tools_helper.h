@@ -49,7 +49,7 @@ public:
      *
      * @param data Data to be normalized.
      */
-    static void normalizeDataCeroOne(Data &data);
+    static void normalizeDataZeroOne(Data &data);
 
     /**
      * @brief Normalize a two-dimensional data matrix to the [-1, 1] range.
@@ -107,6 +107,19 @@ public:
      * - Other values: "Unknown Dataset"
      */
     static std::string getDatasetTitle(const int &option);
+
+    /**
+     * @brief Display a progress bar.
+     *
+     * This function displays a progress bar to visualize the progress of a task.
+     * The progress should be a value between 0.0 and 1.0, where 0.0 indicates no progress,
+     * and 1.0 indicates the task is complete.
+     *
+     * @param progress The progress value between 0.0 and 1.0.
+     *
+     * @note https://stackoverflow.com/questions/14539867/how-to-display-a-progress-indicator-in-pure-c-c-cout-printf
+     */
+    static void progress_bar(float progress);
 };
 
 #endif // TOOLS_HELPER_H

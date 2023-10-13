@@ -7,7 +7,7 @@ show_help() {
     echo "Usage: $0 [-p] [-t] [-h] [-s SEED] [-d DATASET]"
     echo "  -p           Parallel execution (optional)"
     echo "  -s SEED      Seed for random number generation (optional)"
-    echo "  -d DATASET   Dataset to process (1, 2, 3) (optional)"
+    echo "  -d DATASET   Dataset to process (1, 2, 3, 4) (optional)"
     echo "  -t TEST      Activate test to dump debug info into txt files (optional)"
     echo "  -h HELP      Show this help message and exit"
     exit 1
@@ -53,7 +53,7 @@ if [ ! -d "$ResultsDir" ]; then
 fi
 
 # Define datasets
-Datasets=("heart" "parkinsons" "ionosphere")
+Datasets=("heart" "parkinsons" "ionosphere" "diabetes")
 
 # Function to execute the program for a single dataset
 run_single_dataset() {
@@ -80,7 +80,7 @@ run_single_dataset() {
         # Execute the command
         $cmd > "$ResultsDir/${dataset_name}_results.txt"
     else
-        echo "Error: Invalid dataset index. Available datasets are 1, 2, and 3."
+        echo "Error: Invalid dataset index. Available datasets are 1, 2, 3 and 4."
         show_help
     fi
 }

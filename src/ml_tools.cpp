@@ -11,6 +11,7 @@
 #include <thread>
 #include "seed.h"
 #include <future>
+#include <functional>
 
 char MLTools::KNNClassifier(const Data &data, const std::vector<double> &element, const std::vector<double> &weigths, const unsigned int &k)
 {
@@ -63,16 +64,17 @@ char MLTools::KNNClassifier(const Data &data, const std::vector<double> &element
     }
 }
 
-std::vector<double> MLTools::KNN(const Data &data, std::vector<double> &weights)
+std::vector<double> MLTools::KNN(const Data &data, std::vector<double> &weights, std::vector<std::string> &hyperParams)
 {
     // Weigth vector to one, knn does not modify weights
     return std::vector<double>(data.getData()[0].size(), 1.0);
 }
 
-void MLTools::kCrossValidation(const Data &data, const MLTools::Optimizer &optimizer, const int numberPartitions, const std::string &option)
+void MLTools::kCrossValidation(const Data &data, const Optimizer &optimizer, const int numberPartitions, std::vector<std::string> &hyperParams)
 {
     const double alpha = 0.5;
     double TS_average = 0, TR_average = 0, A_average = 0;
+    bool showPartitions = true;
 
     auto overallStartTime = std::chrono::high_resolution_clock::now();
 
@@ -105,7 +107,8 @@ void MLTools::kCrossValidation(const Data &data, const MLTools::Optimizer &optim
         std::vector<double> w(data.getData()[0].size());
         std::generate(w.begin(), w.end(), [&]()
                       { return ToolsHelper::generateNormalRandomNumber(0.0, std::sqrt(0.3), Seed::getInstance().getSeed()); });
-        std::vector<double> weights = optimizer(trainingData, w);
+
+        std::vector<double> weights = optimizer(trainingData, w, hyperParams);
 
         for (double &wi : weights)
         {
@@ -124,15 +127,22 @@ void MLTools::kCrossValidation(const Data &data, const MLTools::Optimizer &optim
         TR_average += reductionRate;
         A_average += fitness;
 
+        // Calculate progress
+        float progress = static_cast<float>(partitionIndex + 1) / partitions.size();
         auto endTime = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double, std::milli> executionTime = endTime - startTime;
 
-        std::cout << "[PART " << partitionIndex + 1 << "] | Classification Rate: " << classificationAccuracy << std::endl;
-        std::cout << "[PART " << partitionIndex + 1 << "] | Reduction Rate: " << reductionRate << std::endl;
-        std::cout << "[PART " << partitionIndex + 1 << "] | Fitness: " << fitness << std::endl;
-        std::cout << "[PART " << partitionIndex + 1 << "] | Execution Time: " << std::fixed << std::setprecision(2) << executionTime.count() << " ms\n\n";
-        std::cout << "--------------------------------------\n"
-                  << std::endl;
+        // Update the progress bar
+        ToolsHelper::progress_bar(progress);
+        if (showPartitions)
+        {
+            std::cout << "\n\n[PART " << partitionIndex + 1 << "] | Classification Rate: " << classificationAccuracy << std::endl;
+            std::cout << "[PART " << partitionIndex + 1 << "] | Reduction Rate: " << reductionRate << std::endl;
+            std::cout << "[PART " << partitionIndex + 1 << "] | Fitness: " << fitness << std::endl;
+            std::cout << "[PART " << partitionIndex + 1 << "] | Execution Time: " << std::fixed << std::setprecision(2) << executionTime.count() << " ms\n\n";
+            std::cout << "--------------------------------------\n"
+                      << std::endl;
+        }
     }
 
     auto overallEndTime = std::chrono::high_resolution_clock::now();
@@ -146,21 +156,36 @@ void MLTools::kCrossValidation(const Data &data, const MLTools::Optimizer &optim
     std::cout << "Total Execution Time: " << std::fixed << std::setprecision(2) << totalTime.count() << " ms\n\n";
 }
 
-std::vector<double> MLTools::localSearch(const Data &data, std::vector<double> &weights)
+std::vector<double> MLTools::localSearch(const Data &data, std::vector<double> &weights, std::vector<std::string> &hyperParams)
 {
-    // Variables used
-    const double variance = 0.3;
-    const double alpha = 0.5;
-    const double mean = 0.0;
-    int maxIter = 15000;
-    int maxNeighbour = 0;
+    // Default values for parameters
+    double variance = 0.3;
+    double alpha = 0.5;
+    double mean = 0.0;
+    unsigned int maxIter = 15000;
+    unsigned int maxNeighbour = 0;
+
+    if (!hyperParams.empty())
+    {
+        if (hyperParams.size() != 5 && hyperParams.empty())
+        {
+            throw std::invalid_argument("Error: hyperParams must strictly contain 5 parameters.");
+        }
+        // Update parameters from hyperParams
+        variance = std::stod(hyperParams[0]);
+        alpha = std::stod(hyperParams[1]);
+        mean = std::stod(hyperParams[2]);
+        maxIter = std::stoi(hyperParams[3]);
+        maxNeighbour = std::stoi(hyperParams[4]);
+    }
 
     if (maxNeighbour == 0)
     {
         maxNeighbour = data.getData()[0].size() * 2;
     }
 
-    int counter = 0, neighbourCount = 0;
+    unsigned int counter = 0;
+    unsigned int neighbourCount = 0;
     double maxFunctionValue = -std::numeric_limits<double>::infinity();
     /*std::vector<double> w(data.getData()[0].size());
 
@@ -184,7 +209,7 @@ std::vector<double> MLTools::localSearch(const Data &data, std::vector<double> &
 
         // Ensure w[i] is within the bounds [0, 1]
         w[randIndex] = std::max(0.0, std::min(1.0, w[randIndex]));
-        if (w[randIndex] < 0.1 && w[randIndex] > -0.1)
+        if (w[randIndex] < 0.1)
         {
             w[randIndex] = 0.0; // Modify the weights directly in the input vector
         }
@@ -294,10 +319,9 @@ double MLTools::computeAccuracy(const Data &sample, const std::vector<double> &w
     return correctlyClassifiedInstances / static_cast<double>(totalInstances);
 }
 
-double MLTools::levyFlight()
+std::vector<double> MLTools::levyFlight(const std::vector<double> &butterfly, double alpha)
 {
     // Parameters for Levy flight distribution
-    const double alpha = 1.5; // You can adjust this value to control the Levy flight characteristics
     const double scale = 0.01;
 
     std::mt19937 eng(Seed::getInstance().getSeed());
@@ -305,7 +329,17 @@ double MLTools::levyFlight()
     // Levy flight formula
     std::gamma_distribution<double> dist(alpha, scale);
 
-    return dist(eng);
+    double stepSize = dist(eng);
+    double direction = ToolsHelper::generateUniformRandomNumberDouble(0.0, 2.0 * M_PI, Seed::getInstance().getSeed());
+
+    // Calculate the new position based on the butterfly and the step size
+    std::vector<double> newPosition(butterfly.size());
+    for (size_t i = 0; i < butterfly.size(); ++i)
+    {
+        newPosition[i] = butterfly[i] + stepSize * tan(direction);
+    }
+
+    return newPosition;
 }
 
 void MLTools::migration(std::vector<std::vector<double>> &subpob1, std::vector<std::vector<double>> &subpob2, double period, double p)
@@ -348,8 +382,8 @@ void MLTools::adjust(std::vector<std::vector<double>> &subpob2, const std::vecto
 
                 if (n > BAR)
                 {
-                    double dx = levyFlight(); // Implement this function
-                    subpob2[i][kIndex] += alpha * (dx - 0.5);
+                    std::vector<double> dx = levyFlight(subpob2[i], alpha);
+                    subpob2[i][kIndex] += alpha * (dx[kIndex] - 0.5);
                 }
             }
         }
@@ -387,7 +421,7 @@ std::vector<std::vector<double>> MLTools::elitism(const Data &data, std::vector<
     return np;
 }
 
-std::vector<double> MLTools::mbo(const Data &data, std::vector<double> &weights)
+std::vector<double> MLTools::mbo(const Data &data, std::vector<double> &weights, std::vector<std::string> &hyperParams)
 {
     double variance = 0.3, mean = 0.0;
 
@@ -403,7 +437,7 @@ std::vector<double> MLTools::mbo(const Data &data, std::vector<double> &weights)
     int t = 1;
     double delta = 0.1;
     double error = 1.0;
-    const int maxGen = 30;
+    const int maxGen = 10;
     const double BAR = 5.0 / 12.0;
     const double p = 5.0 / 12.0;
     const double periodo = 1.2;
@@ -411,6 +445,7 @@ std::vector<double> MLTools::mbo(const Data &data, std::vector<double> &weights)
     double alpha = 0.0;
     int np1Size = static_cast<int>(p * np.size());
     std::vector<double> fitnessPopulation;
+    std::vector<std::string> hyperLSParams;
 
     fitnessPopulation = MLTools::computePopulationFitness(data, np, 0.5);
 
@@ -431,7 +466,7 @@ std::vector<double> MLTools::mbo(const Data &data, std::vector<double> &weights)
         }
 
         // Keep the best butterfly
-        std::vector<double> bestButterfly = MLTools::localSearch(data, np[bestSolutionIndex]); // Improvement of best butterfly
+        std::vector<double> bestButterfly = MLTools::localSearch(data, np[bestSolutionIndex], hyperLSParams);
 
         // Divide the remaining population into two subpopulations
         std::vector<std::vector<double>>
@@ -474,7 +509,7 @@ std::vector<double> MLTools::mbo(const Data &data, std::vector<double> &weights)
         }
     }
 
-    np[bestSolutionIndex] = MLTools::localSearch(data, np[bestSolutionIndex]); // Implement localSearch function
+    np[bestSolutionIndex] = MLTools::localSearch(data, np[bestSolutionIndex], hyperLSParams);
 
     return np[bestSolutionIndex];
 }

@@ -135,7 +135,7 @@ std::vector<Data> Data::createPartitions(int k) const
     }
 
     std::mt19937 gen(Seed::getInstance().getSeed());
-    std::shuffle(shuffled_data.begin(), shuffled_data.end(), gen);
+   // std::shuffle(shuffled_data.begin(), shuffled_data.end(), gen);
 
     // Initialize partitions
     std::vector<Data> partitions(k);

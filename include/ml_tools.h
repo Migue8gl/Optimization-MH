@@ -2,7 +2,19 @@
 #define ML_TOOLS_H
 
 #include <vector>
-#include "data.h" // You should include the appropriate header for the Data class here
+#include <cmath>
+#include <limits>
+#include <stdexcept>
+#include <algorithm>
+#include <unordered_map>
+#include "ml_tools.h"
+#include "tools_helper.h"
+#include <chrono>
+#include <iomanip>
+#include <thread>
+#include "seed.h"
+#include <future>
+#include "data.h"
 
 /**
  * @brief Utility class containing machine learning algorithms.
@@ -11,7 +23,7 @@ class MLTools
 {
 public:
     // Define a optimization function type for the ml algorithm
-    using Optimizer = std::vector<double> (*)(const Data &, std::vector<double> &weights);
+    using Optimizer = std::vector<double> (*)(const Data &, std::vector<double> &, std::vector<std::string> &);
 
     /**
      * @brief Perform k-Nearest Neighbors (k-NN) classification to predict the class of an element.
@@ -30,50 +42,47 @@ public:
     static char KNNClassifier(const Data &data, const std::vector<double> &element, const std::vector<double> &weigths, const unsigned int &k = 1);
 
     /**
-     * @brief Function that returns weights to perfom k-Nearest Neighbors classification
+     * @brief Function that returns weights for k-Nearest Neighbors classification.
      *
-     * kNN classifier does not use weights to make his predictions. Due to that, weights returned are all 1's.
+     * The k-Nearest Neighbors (kNN) classifier typically does not use custom weights
+     * for making predictions. In this implementation, it returns a vector of weights,
+     * with each weight set to 1, as they don't affect kNN's standard behavior.
      *
      * @param data An instance of the Data class containing information about data labels and data points.
-     * @return std::vector<double> The weights for each of the data points
+     * @param weights A vector to store the weights (ignored for kNN).
+     * @param hyperParams A vector of hyperparameters (ignored for kNN).
+     * @return std::vector<double> The weights for each of the data points (all set to 1 for kNN).
      */
-    static std::vector<double> KNN(const Data &data, std::vector<double> &weights);
+    static std::vector<double> KNN(const Data &data, std::vector<double> &weights, std::vector<std::string> &hyperParams);
 
     /**
      * @brief Perform k-fold cross-validation.
      *
      * This method performs k-fold cross-validation for a given optimizer algorithm
-     * on the provided dataset. Cross-validation is used to assess the model's performance
-     * by dividing the dataset into 'numberPartitions' parts and training/testing the model
-     * 'numberPartitions' times, each time using a different part as the test set and the
-     * remaining parts as the training set.
+     * on the provided dataset. Cross-validation assesses the model's performance by
+     * dividing the dataset into 'numberPartitions' parts, training and testing 'numberPartitions'
+     * times with different partitions as the test set each time.
      *
-     * @param data The dataset on which cross-validation will be performed.
-     * @param optimizer The optimizer to be used for training and testing.
+     * @param data The dataset for cross-validation.
+     * @param optimizer The optimizer for training and testing.
      * @param numberPartitions The number of partitions (folds) for cross-validation. Default is 5.
-     * @param opt Additional options or parameters for the optimizer. Default is an empty string.
-     *
-     * @details
-     * Cross-validation is a common technique to assess the generalization performance of a
-     * machine learning model. It helps in estimating how well the model will perform on
-     * unseen data by evaluating its performance on multiple subsets of the dataset.
-     *
+     * @param hyperParams A vector of hyperparameters.
      */
-    static void kCrossValidation(const Data &data, const MLTools::Optimizer &optimizer, const int numberPartitions = 5, const std::string &opt = "");
+    static void kCrossValidation(const Data &data, const Optimizer &optimizer, const int numberPartitions, std::vector<std::string> &hyperParams);
 
     /**
      * @brief Perform local search optimization on a given dataset.
      *
      * This function applies a local search optimization algorithm to find an optimal
-     * set of weights for a given dataset. It starts with an initial set of weights and
-     * iteratively explores neighboring solutions to maximize a specified objective function.
+     * set of weights for a given dataset. It iteratively explores neighboring solutions to
+     * maximize a specified objective function.
      *
      * @param data The dataset represented as an instance of the Data class.
-     * @param opt An optional string parameter for specifying optimization settings (default: empty string).).
+     * @param weights A vector of initial weights.
+     * @param hyperParams A vector of hyperparameters (optional).
      * @return A vector of double values representing the optimized weights for the dataset.
-     *
      */
-    static std::vector<double> localSearch(const Data &data, std::vector<double> &weights);
+    static std::vector<double> localSearch(const Data &data, std::vector<double> &weights, std::vector<std::string> &hyperParams);
 
     /**
      * @brief Perform the Monarch Butterfly Optimization (MBO) algorithm.
@@ -81,10 +90,11 @@ public:
      * This static function performs the Monarch Butterfly Optimization (MBO) algorithm on the given data.
      *
      * @param data The data object containing the dataset and labels.
-     * @param ls Flag indicating whether to perform local search.
+     * @param weights A vector of initial weights.
+     * @param hyperParams A vector of hyperparameters (optional).
      * @return The optimized solution found by the algorithm.
      */
-    static std::vector<double> mbo(const Data &data, std::vector<double> &weights);
+    static std::vector<double> mbo(const Data &data, std::vector<double> &weights, std::vector<std::string> &hyperParams);
 
 private:
     /**
@@ -140,7 +150,7 @@ private:
      *
      * @return The generated random number.
      */
-    static double levyFlight();
+    static std::vector<double> levyFlight(const std::vector<double> &butterfly, double alpha);
 
     /**
      * @brief Perform migration of subpopulations between mariposas.

@@ -1,0 +1,11 @@
+-------- Test KNN Classifier --------
+
+Testing KNNClassifier with k = 10
+
+Test Element: [0.00, 0.13, 0.06, 0.03, 0.07, 0.04, 0.00, 0.03]
+
+Weights: [1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00]
+
+Predicted Class = -
+True Class = -
+Prediction is correct.
