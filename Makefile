@@ -27,7 +27,7 @@ directories:
 	mkdir -p $(OBJDIR) $(BINDIR)
 
 clean:
-	rm -rf $(OBJDIR) $(BINDIR)
+	rm -rf $(OBJDIR) $(BINDIR) $(FILEDIR)/results/*.txt $(FILEDIR)/tests/*.txt $(TARFILE)
 
 compress:
 	tar -czvf $(TARFILE) $(SRCDIR) $(INCDIR) $(FILEDIR) $(SCRPDIR) $(DATADIR) Makefile README.txt

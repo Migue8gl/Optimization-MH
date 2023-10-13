@@ -34,8 +34,9 @@ bld/
 
 # Results, test files and obj
 obj/
-files/results/
-files/tests/
+/files/results/*
+/files/tests/*
+/bin/*
 
 # Compressed proyect
 *.gz
