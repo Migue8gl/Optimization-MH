@@ -37,13 +37,13 @@ obj/
 files/results/*
 files/tests/*
 bin/*
+.vscode/*
 
 # Compressed proyect
 *.gz
 
 
 # Visual Studio 2015/2017 cache/options directory
-.vscode/
 # Uncomment if you have tasks that create the project's static files in wwwroot
 #wwwroot/
 
