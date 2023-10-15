@@ -96,6 +96,19 @@ public:
      */
     static std::vector<double> mbo(const Data &data, std::vector<double> &weights, std::vector<std::string> &hyperParams);
 
+    /**
+     * @brief Apply the Simulated Annealing algorithm to optimize a set of weights.
+     *
+     * This static function applies the Simulated Annealing algorithm to optimize a set of
+     * weights for a given dataset using the specified hyperparameters.
+     *
+     * @param data The dataset on which to perform optimization.
+     * @param weights A vector of initial weights.
+     * @param hyperParams A vector of hyperparameters (optional).
+     * @return The optimized set of weights determined by the Simulated Annealing algorithm.
+     */
+    static std::vector<double> simulatedAnnealing(const Data &data, std::vector<double> &weights, std::vector<std::string> &hyperParams);
+
 private:
     /**
      * @brief Calculate the Euclidean distance between two data points.

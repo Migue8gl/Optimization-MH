@@ -14,8 +14,10 @@
 class Data
 {
 private:
-    std::vector<std::vector<double>> data; ///< The data storage.
-    std::vector<char> labels;              ///< The labels associated with data.
+    std::vector<std::vector<double>> data; // The data storage.
+    std::vector<char> labels;              // The labels associated with data.
+    double mean;
+    double variance;
 
 public:
     /**
@@ -48,6 +50,28 @@ public:
      * @return A constant reference to the labels.
      */
     const std::vector<char> &getLabels() const;
+
+    /**
+     * @brief Get the mean value of the data stored in this object.
+     * @return The mean value.
+     */
+    const double &getMean() const;
+
+    /**
+     * @brief Get the variance of the data stored in this object.
+     * @return The variance value.
+     */
+    const double &getVariance() const;
+
+    /**
+     * @brief Compute the mean value of the data stored in this object.
+     */
+    void computeMean();
+
+    /**
+     * @brief Compute the variance of the data stored in this object.
+     */
+    void computeVariance();
 
     // Mutators
 

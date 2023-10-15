@@ -95,6 +95,8 @@ void ToolsHelper::normalizeDataZeroOne(Data &data)
     }
 
     data.setData(dataMatrix);
+    data.computeMean();
+    data.computeVariance();
 }
 
 void ToolsHelper::normalizeDataMinusOneOne(Data &data)
@@ -135,6 +137,8 @@ void ToolsHelper::normalizeDataMinusOneOne(Data &data)
     }
 
     data.setData(data_matrix);
+    data.computeMean();
+    data.computeVariance();
 }
 
 int ToolsHelper::generateUniformRandomNumberInteger(int min, int max, std::random_device::result_type seed)
@@ -196,4 +200,3 @@ void ToolsHelper::progress_bar(float progress)
     std::cout << "] " << int(progress * 100.0) << " %\r";
     std::cout.flush();
 }
-

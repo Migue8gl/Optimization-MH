@@ -1,15 +1,73 @@
 #include "data.h"
 #include "seed.h"
+#include <limits>
 
-Data::Data() : data(), labels() {}
+Data::Data() : data(), labels(), mean(std::numeric_limits<double>::quiet_NaN()), variance(std::numeric_limits<double>::quiet_NaN()) {}
 
-Data::Data(std::vector<std::vector<double>> data, std::vector<char> labels) : data(data), labels(labels) {}
+Data::Data(std::vector<std::vector<double>> data, std::vector<char> labels)
+{
+    this->labels = labels;
+    this->data = data;
+    this->computeMean();
+    this->computeVariance();
+}
 
 Data::~Data() {}
 
 const std::vector<std::vector<double>> &Data::getData() const
 {
     return this->data;
+}
+
+void Data::computeMean()
+{
+    unsigned int totalElements = 0.0;
+
+    double sum = 0.0;
+
+    for (const std::vector<double> &innerVector : this->getData())
+    {
+        for (double value : innerVector)
+        {
+            sum += value;
+            totalElements++;
+        }
+    }
+
+    this->mean = sum / static_cast<double>(totalElements);
+}
+
+void Data::computeVariance()
+{
+    unsigned int totalElements = 0.0;
+
+    double sum = 0.0;
+    double squaredSum = 0.0;
+
+    for (const std::vector<double> &innerVector : this->getData())
+    {
+        for (double value : innerVector)
+        {
+            sum += value;
+            squaredSum += value * value;
+            totalElements++;
+        }
+    }
+
+    double mean = sum / static_cast<double>(totalElements);
+    double meanOfSquares = squaredSum / static_cast<double>(totalElements);
+
+    this->variance = meanOfSquares - (mean * mean);
+}
+
+const double &Data::getVariance() const
+{
+    return this->variance;
+}
+
+const double &Data::getMean() const
+{
+    return this->mean;
 }
 
 const std::vector<char> &Data::getLabels() const
@@ -33,12 +91,17 @@ void Data::addDataPoint(const std::vector<double> &newDataPoint, char newLabel)
 {
     this->data.push_back(newDataPoint);
     this->labels.push_back(newLabel);
+
+    this->computeMean();
+    this->computeVariance();
 }
 
 void Data::clearData()
 {
     this->data.clear();
     this->labels.clear();
+    this->variance = std::numeric_limits<double>::quiet_NaN();
+    this->mean = std::numeric_limits<double>::quiet_NaN();
 }
 
 unsigned int Data::size() const
@@ -115,6 +178,8 @@ void Data::readDataARFF(const std::string &file)
 
     this->setData(data);
     this->setLabels(labels);
+    this->computeMean();
+    this->computeVariance();
 }
 
 std::vector<Data> Data::createPartitions(int k) const
@@ -135,7 +200,7 @@ std::vector<Data> Data::createPartitions(int k) const
     }
 
     std::mt19937 gen(Seed::getInstance().getSeed());
-   // std::shuffle(shuffled_data.begin(), shuffled_data.end(), gen);
+    // std::shuffle(shuffled_data.begin(), shuffled_data.end(), gen);
 
     // Initialize partitions
     std::vector<Data> partitions(k);

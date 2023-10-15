@@ -74,7 +74,7 @@ void MLTools::kCrossValidation(const Data &data, const Optimizer &optimizer, con
 {
     const double alpha = 0.5;
     double TS_average = 0, TR_average = 0, A_average = 0;
-    bool showPartitions = false;
+    bool showPartitions = true;
 
     auto overallStartTime = std::chrono::high_resolution_clock::now();
 
@@ -106,7 +106,7 @@ void MLTools::kCrossValidation(const Data &data, const Optimizer &optimizer, con
         // Test
         std::vector<double> w(data.getData()[0].size());
         std::generate(w.begin(), w.end(), [&]()
-                      { return ToolsHelper::generateNormalRandomNumber(0.0, std::sqrt(0.3), Seed::getInstance().getSeed()); });
+                      { return ToolsHelper::generateUniformRandomNumberDouble(0.0, 1.0, Seed::getInstance().getSeed()); });
 
         std::vector<double> weights = optimizer(trainingData, w, hyperParams);
 
@@ -211,10 +211,6 @@ std::vector<double> MLTools::localSearch(const Data &data, std::vector<double> &
 
         // Ensure w[i] is within the bounds [0, 1]
         w[randIndex] = std::max(0.0, std::min(1.0, w[randIndex]));
-        if (w[randIndex] < 0.1)
-        {
-            w[randIndex] = 0.0; // Modify the weights directly in the input vector
-        }
 
         objetiveFunction = MLTools::computeFitness(data, w, alpha);
         if (objetiveFunction > maxFunctionValue)
@@ -423,23 +419,100 @@ std::vector<std::vector<double>> MLTools::elitism(const Data &data, std::vector<
     return np;
 }
 
+std::vector<double> MLTools::simulatedAnnealing(const Data &data, std::vector<double> &weights, std::vector<std::string> &hyperParams)
+{
+    // Initialize weight vector using a random generator
+    std::vector<double> currentWeights = weights;
+    std::vector<double> bestWeights(data.getData()[0].size());
+
+    // Initialize parameters
+    int maxNeighbours = 10 * currentWeights.size();
+    double alpha = 0.5;
+    int maxSuccess = 0.1 * maxNeighbours;
+    int M = 15000 / maxNeighbours;
+    double mu = 0.3;
+    double k = 1.0;
+    int iter = 0;
+    double mean = 0.0;
+    double variance = 0.3;
+
+    double currentEval = MLTools::computeFitness(data, weights, alpha);
+    double bestEval = currentEval;
+    bestWeights.swap(currentWeights);
+
+    // Initial temperature
+    double initialTemperature = (mu * currentEval) / -log(mu);
+    // Final temperature
+    double finalTemperature = 0.001;
+
+    // Ensure final temperature is always smaller than initial temperature
+    while (finalTemperature > initialTemperature)
+    {
+        finalTemperature *= 0.001;
+    }
+
+    double beta = (initialTemperature - finalTemperature) / (M * finalTemperature * initialTemperature);
+
+    // Current temperature
+    double currentTemperature = initialTemperature;
+
+    while (iter < M && currentTemperature > finalTemperature)
+    {
+        int successCount = 0;
+        int neighboursCount = 0;
+
+        while (successCount < maxSuccess && neighboursCount < maxNeighbours)
+        {
+            std::vector<double> newWeights = currentWeights;
+
+            // Start mutations
+            int index = ToolsHelper::generateUniformRandomNumberInteger(0, newWeights.size() - 1, Seed::getInstance().getSeed());
+            newWeights[index] += ToolsHelper::generateNormalRandomNumber(mean, std::sqrt(variance), Seed::getInstance().getSeed());
+
+            newWeights[index] = std::max(0.0, std::min(1.0, newWeights[index]));
+
+            // Evaluate the new solution
+            double newEval = MLTools::computeFitness(data, newWeights, alpha);
+            double diff = newEval - currentEval;
+
+            if (diff > 0.0 || ToolsHelper::generateUniformRandomNumberDouble(0, 1, Seed::getInstance().getSeed()) <= (exp(diff) / (k * currentTemperature)))
+            {
+                currentEval = newEval;
+                currentWeights.swap(newWeights);
+                successCount += 1;
+
+                if (currentEval > bestEval)
+                {
+                    bestEval = currentEval;
+                    bestWeights = currentWeights;
+                }
+            }
+
+            neighboursCount += 1;
+        }
+
+        currentTemperature = currentTemperature / (1 + (beta * currentTemperature));
+        iter += 1;
+    }
+
+    return bestWeights;
+}
+
 std::vector<double> MLTools::mbo(const Data &data, std::vector<double> &weights, std::vector<std::string> &hyperParams)
 {
-    double variance = 0.3, mean = 0.0;
-
     // Initialize population of butterflies NP
     std::vector<std::vector<double>> np(data.size(), std::vector<double>(data.getData()[0].size()));
 
     for (std::vector<double> &butterfly : np)
     {
-        std::generate(butterfly.begin(), butterfly.end(), [mean, variance]()
-                      { return ToolsHelper::generateNormalRandomNumber(mean, std::sqrt(variance), Seed::getInstance().getSeed()); });
+        std::generate(butterfly.begin(), butterfly.end(), [&]()
+                      { return ToolsHelper::generateUniformRandomNumberDouble(0.0, 1.0, Seed::getInstance().getSeed()); });
     }
 
     int t = 1;
-    double delta = 0.1;
+    double delta = 0.08;
     double error = 1.0;
-    const int maxGen = 10;
+    const int maxGen = 30;
     const double BAR = 5.0 / 12.0;
     const double p = 5.0 / 12.0;
     const double periodo = 1.2;
