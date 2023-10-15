@@ -86,36 +86,34 @@ int main(int argc, char *argv[])
             data.readDataARFF(p);
             ToolsHelper::normalizeDataZeroOne(data);
             
-            //  Separator for the first function call
             std::cout << "------------------------------------------" << std::endl;
             std::cout << "Calling MLTools::kCrossValidation with KNN" << std::endl;
             std::cout << "------------------------------------------" << std::endl;
 
-            // Call the first function
             MLTools::kCrossValidation(data, MLTools::knn, 5, hyperParams);
 
-            // Separator for the second function call
-            std::cout << "--------------------------------------------------" << std::endl;
+            std::cout << "---------------------------------------------------" << std::endl;
             std::cout << "Calling MLTools::kCrossValidation with Local Search" << std::endl;
-            std::cout << "--------------------------------------------------" << std::endl;
+            std::cout << "---------------------------------------------------" << std::endl;
 
-            // Call the second function
             MLTools::kCrossValidation(data, MLTools::localSearch, 5, hyperParams);
 
-            // Separator for the third function call
+            /*std::cout << "----------------------------------------------------------" << std::endl;
+            std::cout << "Calling MLTools::kCrossValidation with Local Search Strong" << std::endl;
+            std::cout << "----------------------------------------------------------" << std::endl;
+
+            MLTools::kCrossValidation(data, MLTools::localSearchStrong, 5, hyperParams);*/
+
             std::cout << "------------------------------------------" << std::endl;
             std::cout << "Calling MLTools::kCrossValidation with MBO" << std::endl;
             std::cout << "------------------------------------------" << std::endl;
 
-            // Call the third function
             MLTools::kCrossValidation(data, MLTools::mbo, 5, hyperParams);
 
-             // Separator for the fourth function call
-            std::cout << "------------------------------------------" << std::endl;
+            std::cout << "----------------------------------------------------------" << std::endl;
             std::cout << "Calling MLTools::kCrossValidation with Simulated Annealing" << std::endl;
-            std::cout << "------------------------------------------" << std::endl;
+            std::cout << "----------------------------------------------------------" << std::endl;
 
-            // Call the fourth function
             MLTools::kCrossValidation(data, MLTools::simulatedAnnealing, 5, hyperParams);
 
             if (run_test)

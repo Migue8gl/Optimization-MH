@@ -11,6 +11,7 @@
 #include <thread>
 #include "seed.h"
 #include <future>
+#include <queue>
 #include <functional>
 
 char MLTools::kNNClassifier(const Data &data, const std::vector<double> &element, const std::vector<double> &weigths, const unsigned int &k)
@@ -189,11 +190,6 @@ std::vector<double> MLTools::localSearch(const Data &data, std::vector<double> &
     unsigned int counter = 0;
     unsigned int neighbourCount = 0;
     double maxFunctionValue = -std::numeric_limits<double>::infinity();
-    /*std::vector<double> w(data.getData()[0].size());
-
-    // Initialize w with random normal values in one line
-    std::generate(w.begin(), w.end(), [&]()
-                  { return ToolsHelper::generateNormalRandomNumber(mean, std::sqrt(variance), Seed::getInstance().getSeed()); });*/
     std::vector<double> w = weights;
 
     double wAux;
@@ -230,6 +226,80 @@ std::vector<double> MLTools::localSearch(const Data &data, std::vector<double> &
     return w;
 }
 
+std::vector<double> MLTools::localSearchStrong(const Data &data, std::vector<double> &weights, std::vector<std::string> &hyperParams)
+{
+    // Default values for parameters
+    double variance = 0.4; // Increased variance for LocalSearchStrong
+    double alpha = 0.5;
+    double mean = 0.0;
+    unsigned int maxIter = 30000;
+    unsigned int maxNeighbour = 0;
+    unsigned int maxNumAdjust = 5;
+
+    if (!hyperParams.empty())
+    {
+        if (hyperParams.size() != 5 && hyperParams.empty())
+        {
+            throw std::invalid_argument("Error: hyperParams must strictly contain 5 parameters.");
+        }
+        // Update parameters from hyperParams
+        variance = std::stod(hyperParams[0]);
+        alpha = std::stod(hyperParams[1]);
+        mean = std::stod(hyperParams[2]);
+        maxIter = std::stoi(hyperParams[3]);
+        maxNeighbour = std::stoi(hyperParams[4]);
+    }
+
+    if (maxNeighbour == 0)
+    {
+        maxNeighbour = data.getData()[0].size() * 10;
+    }
+
+    unsigned int counter = 0;
+    unsigned int neighbourCount = 0;
+    double maxFunctionValue = -std::numeric_limits<double>::infinity();
+    std::vector<double> w = weights;
+
+    std::queue<double> wAux;
+    double objetiveFunction = MLTools::computeFitness(data, w, alpha);
+    std::vector<std::pair<unsigned int, double>> originalValues;
+
+    while (neighbourCount < maxNeighbour && counter < maxIter)
+    {
+        unsigned int numAdjustments = ToolsHelper::generateUniformRandomNumberInteger(1, maxNumAdjust, Seed::getInstance().getSeed());
+
+        for (unsigned int i = 0; i < numAdjustments; ++i)
+        {
+            unsigned int randIndex = ToolsHelper::generateUniformRandomNumberInteger(0, w.size() - 1, Seed::getInstance().getSeed());
+            originalValues.emplace_back(randIndex, w[randIndex]);
+            // Mutation
+            w[randIndex] += ToolsHelper::generateNormalRandomNumber(mean, std::sqrt(variance), Seed::getInstance().getSeed());
+
+            // Ensure w[i] is within the bounds [0, 1]
+            w[randIndex] = std::max(0.0, std::min(1.0, w[randIndex]));
+        }
+
+        objetiveFunction = MLTools::computeFitness(data, w, alpha);
+        if (objetiveFunction > maxFunctionValue)
+        {
+            maxFunctionValue = objetiveFunction;
+            neighbourCount = 0;
+        }
+        else
+        {
+            for (const auto &pair : originalValues)
+            {
+                w[pair.first] = pair.second;
+            }
+            neighbourCount += numAdjustments;
+        }
+
+        counter++;
+    }
+
+    return w;
+}
+
 double MLTools::computeFitness(const Data &data, std::vector<double> &weights, const double &alpha)
 {
     double classificationRate = 0.0;
@@ -242,7 +312,6 @@ double MLTools::computeFitness(const Data &data, std::vector<double> &weights, c
         if (weights[i] < 0.1)
         {
             reductionCount += 1.0;
-            // Modify the weights directly in the input vector
             weights[i] = 0.0;
         }
     }
@@ -262,20 +331,18 @@ std::vector<double> MLTools::computePopulationFitness(const Data &data, std::vec
         double classificationRate = 0.0;
         double reductionRate = 0.0;
         double reductionCount = 0.0;
-        std::vector<double> weights = populationWeights[i];
 
-        for (unsigned int j = 0; j < weights.size(); ++j)
+        for (unsigned int j = 0; j < populationWeights[i].size(); ++j)
         {
-            if (weights[j] < 0.1)
+            if (populationWeights[i][j] < 0.1)
             {
                 reductionCount += 1.0;
-                // Optionally modify the weights directly in the input vector
-                weights[j] = 0.0;
+                populationWeights[i][j] = 0.0;
             }
         }
 
-        classificationRate = MLTools::computeAccuracy(data, weights);
-        reductionRate = reductionCount / static_cast<double>(weights.size());
+        classificationRate = MLTools::computeAccuracy(data, populationWeights[i]);
+        reductionRate = reductionCount / static_cast<double>(populationWeights[i].size());
 
         fitness[i] = reductionRate * alpha + classificationRate * (1 - alpha);
     }
@@ -382,6 +449,7 @@ void MLTools::adjust(std::vector<std::vector<double>> &subpob2, const std::vecto
                 {
                     std::vector<double> dx = levyFlight(subpob2[i], alpha);
                     subpob2[i][kIndex] += alpha * (dx[kIndex] - 0.5);
+                    subpob2[i][kIndex] = std::max(0.0, std::min(1.0, subpob2[i][kIndex]));
                 }
             }
         }
@@ -512,7 +580,7 @@ std::vector<double> MLTools::mbo(const Data &data, std::vector<double> &weights,
     int t = 1;
     double delta = 0.08;
     double error = 1.0;
-    const int maxGen = 30;
+    const int maxGen = 10;
     const double BAR = 5.0 / 12.0;
     const double p = 5.0 / 12.0;
     const double periodo = 1.2;
@@ -541,7 +609,7 @@ std::vector<double> MLTools::mbo(const Data &data, std::vector<double> &weights,
         }
 
         // Keep the best butterfly
-        std::vector<double> bestButterfly = MLTools::localSearch(data, np[bestSolutionIndex], hyperLSParams);
+        std::vector<double> bestButterfly = np[bestSolutionIndex];
 
         // Divide the remaining population into two subpopulations
         std::vector<std::vector<double>>

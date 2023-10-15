@@ -57,6 +57,22 @@ void ToolsHelper::displayDataInfo(const Data &data, const std::string &separator
     }
 }
 
+void ToolsHelper::zScoreNormalize(Data &data)
+{
+    double mean = data.getMean();
+    double stdDev = std::sqrt(data.getVariance());
+
+    std::vector<std::vector<double>> sample = data.getData();
+
+    for (std::vector<double> &row : sample)
+    {
+        for (double &value : row)
+            value = (value - mean) / stdDev;
+    }
+
+    data.setData(sample);
+}
+
 void ToolsHelper::normalizeDataZeroOne(Data &data)
 {
     std::vector<std::vector<double>> dataMatrix = data.getData();

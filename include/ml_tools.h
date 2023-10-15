@@ -85,6 +85,23 @@ public:
     static std::vector<double> localSearch(const Data &data, std::vector<double> &weights, std::vector<std::string> &hyperParams);
 
     /**
+     * @brief Perform a strong local search optimization on a given dataset.
+     *
+     * This function applies a strong local search optimization algorithm to find an optimal
+     * set of weights for a given dataset. It iteratively explores neighboring solutions to
+     * maximize a specified objective function by adjusting multiple weights simultaneously.
+     *
+     * @param data The dataset represented as an instance of the Data class.
+     * @param weights A vector of initial weights.
+     * @param hyperParams A vector of hyperparameters (optional).
+     * @return A vector of double values representing the optimized weights for the dataset.
+     *
+     * @note The strong local search explores a broader range of weight adjustments and may converge faster
+     * or escape local optima. Experiment with hyperparameters for the best performance on your specific problem.
+     */
+    static std::vector<double> localSearchStrong(const Data &data, std::vector<double> &weights, std::vector<std::string> &hyperParams);
+
+    /**
      * @brief Perform the Monarch Butterfly Optimization (MBO) algorithm.
      *
      * This static function performs the Monarch Butterfly Optimization (MBO) algorithm on the given data.

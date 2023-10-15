@@ -42,6 +42,17 @@ public:
     static void displayDataInfo(const Data &data, const std::string &separator = "\n");
 
     /**
+     * @brief Normalize the data using Z-score (Standard Score) normalization.
+     *
+     * Z-score normalization transforms data into a standard normal distribution with a mean of 0
+     * and a standard deviation of 1. This function takes a reference to a Data object and
+     * normalizes its values using Z-score normalization.
+     *
+     * @param data A reference to the Data object to be normalized.
+     */
+    static void zScoreNormalize(Data &data);
+
+    /**
      * @brief Normalize a two-dimensional data matrix to the [0, 1] range.
      *
      * This function normalizes each element in the matrix to fall within the [0, 1] range while preserving

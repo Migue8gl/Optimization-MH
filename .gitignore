@@ -37,7 +37,7 @@ obj/
 files/results/*
 files/tests/*
 bin/*
-.vscode/*
+/.vscode/*
 
 # Compressed proyect
 *.gz
