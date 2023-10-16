@@ -128,6 +128,19 @@ public:
      * @return A vector containing data partitions.
      */
     std::vector<Data> createPartitions(int k) const;
+
+    /**
+     * @brief Merges the data and labels from another Data instance into the current instance.
+     *
+     * This method appends the data points and labels from the provided Data instance, 'otherData',
+     * to the current Data instance. After calling this method, the current instance will contain
+     * the merged data and labels.
+     *
+     * @param otherData The Data instance containing data and labels to be merged into the current instance.
+     *
+     * @note This method modifies the current Data instance in place.
+     */
+    void mergeData(const Data &otherData);
 };
 
 #endif // DATA_H

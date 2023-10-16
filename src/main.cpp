@@ -98,12 +98,6 @@ int main(int argc, char *argv[])
 
             MLTools::kCrossValidation(data, MLTools::localSearch, 5, hyperParams);
 
-            /*std::cout << "----------------------------------------------------------" << std::endl;
-            std::cout << "Calling MLTools::kCrossValidation with Local Search Strong" << std::endl;
-            std::cout << "----------------------------------------------------------" << std::endl;
-
-            MLTools::kCrossValidation(data, MLTools::localSearchStrong, 5, hyperParams);*/
-
             std::cout << "------------------------------------------" << std::endl;
             std::cout << "Calling MLTools::kCrossValidation with MBO" << std::endl;
             std::cout << "------------------------------------------" << std::endl;

@@ -200,16 +200,22 @@ std::vector<Data> Data::createPartitions(int k) const
     }
 
     std::mt19937 gen(Seed::getInstance().getSeed());
-    // std::shuffle(shuffled_data.begin(), shuffled_data.end(), gen);
+    std::shuffle(shuffled_data.begin(), shuffled_data.end(), gen);
 
     // Initialize partitions
     std::vector<Data> partitions(k);
 
-    // Fill partitions while preserving classes
+    // Fill partitions
     for (unsigned int i = 0; i < shuffled_data.size(); ++i)
     {
         partitions[i % k].addDataPoint(shuffled_data[i].first, shuffled_data[i].second);
     }
 
     return partitions;
+}
+
+void Data::mergeData(const Data &otherData)
+{
+    this->data.insert(data.end(), otherData.getData().begin(), otherData.getData().end());
+    this->labels.insert(labels.end(), otherData.getLabels().begin(), otherData.getLabels().end());
 }
