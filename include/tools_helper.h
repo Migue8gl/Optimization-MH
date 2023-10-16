@@ -131,6 +131,13 @@ public:
      * @note https://stackoverflow.com/questions/14539867/how-to-display-a-progress-indicator-in-pure-c-c-cout-printf
      */
     static void progress_bar(float progress);
+
+    /**
+     * @brief Method to return a vector of weights properly initialized
+     *
+     * @return The initialized weights
+     */
+    static std::vector<double> initializeWeights(const int &size);
 };
 
 #endif // TOOLS_HELPER_H

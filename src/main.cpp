@@ -7,6 +7,8 @@
 #include "tools_helper.h"
 #include "seed.h"
 #include "ml_tools.h"
+#include "optimizers.h"
+#include <map>
 
 int main(int argc, char *argv[])
 {
@@ -82,7 +84,7 @@ int main(int argc, char *argv[])
             std::cout << "<------------------ " << ToolsHelper::getDatasetTitle(option + cont) << " ------------------>" << std::endl;
 
             Data data;
-            std::vector<std::string> hyperParams;
+            std::map<std::string, std::string> hyperParams;
             data.readDataARFF(p);
             ToolsHelper::normalizeDataZeroOne(data);
             
@@ -90,25 +92,25 @@ int main(int argc, char *argv[])
             std::cout << "Calling MLTools::kCrossValidation with KNN" << std::endl;
             std::cout << "------------------------------------------" << std::endl;
 
-            MLTools::kCrossValidation(data, MLTools::knn, 5, hyperParams);
+            MLTools::kCrossValidation(data, Optimizers::knn, 5, hyperParams);
 
             std::cout << "---------------------------------------------------" << std::endl;
             std::cout << "Calling MLTools::kCrossValidation with Local Search" << std::endl;
             std::cout << "---------------------------------------------------" << std::endl;
 
-            MLTools::kCrossValidation(data, MLTools::localSearch, 5, hyperParams);
+            MLTools::kCrossValidation(data, Optimizers::localSearch, 5, hyperParams);
 
             std::cout << "------------------------------------------" << std::endl;
             std::cout << "Calling MLTools::kCrossValidation with MBO" << std::endl;
             std::cout << "------------------------------------------" << std::endl;
 
-            MLTools::kCrossValidation(data, MLTools::mbo, 5, hyperParams);
+            MLTools::kCrossValidation(data, Optimizers::mbo, 5, hyperParams);
 
             std::cout << "----------------------------------------------------------" << std::endl;
             std::cout << "Calling MLTools::kCrossValidation with Simulated Annealing" << std::endl;
             std::cout << "----------------------------------------------------------" << std::endl;
 
-            MLTools::kCrossValidation(data, MLTools::simulatedAnnealing, 5, hyperParams);
+            MLTools::kCrossValidation(data, Optimizers::simulatedAnnealing, 5, hyperParams);
 
             if (run_test)
             {

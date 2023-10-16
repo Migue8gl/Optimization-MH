@@ -216,3 +216,11 @@ void ToolsHelper::progress_bar(float progress)
     std::cout << "] " << int(progress * 100.0) << " %\r";
     std::cout.flush();
 }
+
+std::vector<double> ToolsHelper::initializeWeights(const int &size)
+{
+    std::vector<double> w(size);
+    std::generate(w.begin(), w.end(), [&]()
+                  { return ToolsHelper::generateNormalRandomNumber(0.0, 1.0, Seed::getInstance().getSeed()); });
+    return w;
+}

@@ -55,7 +55,7 @@ void Tests::testKNNClassifier(const Data &data, const unsigned int &k)
     int seed = Seed::getInstance().getSeed();
     int randomIndex = ToolsHelper::generateUniformRandomNumberInteger(0, data.size() - 1, seed);
     std::vector<double> element = data.getData()[randomIndex];
-    std::vector<double> weights(data.getData()[0].size(), 1.0);
+    std::vector<double> weights(data.parameterSize(), 1.0);
 
     // Compute the predicted class
     char predictedClass = MLTools::kNNClassifier(data, element, weights, k);

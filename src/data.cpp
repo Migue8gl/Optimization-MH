@@ -109,6 +109,11 @@ unsigned int Data::size() const
     return this->data.size();
 }
 
+unsigned int Data::parameterSize() const
+{
+    return this->data[0].size();
+}
+
 void Data::readDataARFF(const std::string &file)
 {
     std::ifstream ifile(file);

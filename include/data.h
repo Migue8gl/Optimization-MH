@@ -108,6 +108,12 @@ public:
     unsigned int size() const;
 
     /**
+     * @brief Get the number of data atributes stored in one row.
+     * @return The number of attributes.
+     */
+    unsigned int parameterSize() const;
+
+    /**
      * @brief Read data from an ARFF file and extract its data and classes.
      *
      * This function reads data from an ARFF file and extracts the data into a matrix and the classes into a vector.
