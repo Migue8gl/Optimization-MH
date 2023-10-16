@@ -1,1 +1,1 @@
-Project metaheuristic and optimisation algorithms with c++.
+Project metaheuristic optimization algorithms and ml with c++.
